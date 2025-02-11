@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root{
+   --bluecolor : #11175D;
+   --signcolor : #EA6C00;
+   --smscolor : #4D4D4D;
+   --eyeiconcolor : #03014C;
+   --blackcustext : rgba(0, 0, 0, 0, 0.4);
+}
+@theme{
+    --color-blue: var(--bluecolor);
+    --color-sign: var(--signcolor);
+    --color-sms: var(--smscolor);
+    --color-eye: var(--eyeiconcolor);
+    --color-blackcus: var(--blackcustext);
+}
+
+
