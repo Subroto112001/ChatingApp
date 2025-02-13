@@ -1,14 +1,17 @@
  export const Registrationinput = () => {
     return [{
         id: 1,
-        name : "email"  
+        name: "Email" ,
+        placeholder : "email"
     },
         {
             id: 2,
-            name : "fullname"
+            name : "Fullname",
+            placeholder : "fullname"
         },
         {
             id: 3,
-            name : "passward"
+            name : "Passward",
+            placeholder : "passward"
     }]
 }

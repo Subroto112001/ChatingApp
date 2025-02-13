@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root{
-   --bluecolor : #11175D;
+   --bluecolor : #5F35F5;
    --signcolor : #EA6C00;
    --smscolor : #4D4D4D;
    --eyeiconcolor : #03014C;
@@ -14,5 +14,7 @@
     --color-eye: var(--eyeiconcolor);
     --color-blackcus: var(--blackcustext);
 }
-
+@layer components {
+  
+}
 
