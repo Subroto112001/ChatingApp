@@ -4,14 +4,15 @@
    --bluecolor : #5F35F5;
    --signcolor : #EA6C00;
    --smscolor : #4D4D4D;
-   --eyeiconcolor : #03014C;
+   --SeconHeader : #03014C;
    --blackcustext : rgba(0, 0, 0, 0, 0.4);
+   
 }
 @theme{
     --color-blue: var(--bluecolor);
     --color-sign: var(--signcolor);
     --color-sms: var(--smscolor);
-    --color-eye: var(--eyeiconcolor);
+    --color-Second: var(--SeconHeader);
     --color-blackcus: var(--blackcustext);
 }
 @layer components {

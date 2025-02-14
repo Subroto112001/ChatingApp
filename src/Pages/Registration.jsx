@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-import ChatingImage from "./assets/Chating.jpg";
-import { Registrationinput } from "./lib/Registrationfrom";
+import ChatingImage from "../assets/Chating.jpg";
+import { Registrationinput } from "../lib/Registrationfrom";
 import { FaEye } from "react-icons/fa";
-import Button from "./Component/Comon/Button";
+import Button from "../Component/Comon/Button";
 const Registration = () => {
   const information = Registrationinput();
 
@@ -53,7 +53,7 @@ const Registration = () => {
                       type={eye ? "text" : "Password"}
                       placeholder={`This is Your ${information.name}`}
                       name={information.name}
-                      className="InputCus px-2 py-3  border border-amber-900 mt-2 rounded-sm"
+                      className=" px-2 py-3  border border-amber-900 mt-2 rounded-sm"
                       onChange={Takeinput}
                     />
                     <div

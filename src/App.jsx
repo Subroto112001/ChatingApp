@@ -1,12 +1,16 @@
-import React from 'react'
-import Registration from './Registration'
+import React from "react";
+import Registration from "./Pages/Registration";
+import LogInPage from "./Pages/LogInPage";
+
 
 const App = () => {
   return (
     <>
-    <Registration/>
+      <Registration />
+      <LogInPage/>
+      
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
