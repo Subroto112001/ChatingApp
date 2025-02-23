@@ -11,18 +11,33 @@ const Registration = () => {
   const [fullname, setfullname] = useState("");
   const [passward, setpassward] = useState("");
   const [eye, seteye] = useState(false);
+  const [emailerror, setEmailError] = useState("");
+  const [FullNameerror, setFullNameError] = useState("");
+  const [PassWarderror, setPassWardError] = useState("");
 
   const Takeinput = (event) => {
     const { name, value } = event.target;
 
-    if (name === "email") {
+    if (name === "Email") {
       setemail(value);
-    } else if (name === "fullname") {
+    } else if (name === "Fullname") {
       setfullname(value);
     } else {
       setpassward(value);
     }
   };
+
+ const handleSignup=()=>{
+   if ( !email) {
+  setEmailError("Email is missing");
+   } else if (!fullname) {
+     setFullNameError("Full Name is missing");
+   } else if (!passward) {
+     setPassWardError("Passward is missing");
+   } else {
+ alert("Sucsesfully done");
+   }
+}
 
   const EyeShow = () => {
     seteye(!eye);
@@ -62,6 +77,12 @@ const Registration = () => {
                     >
                       <FaEye />
                     </div>
+                    <span className="text-red-600">
+                      {information.name =
+                        "Passward" && passward == "" ? (
+                          <span className="text-red-600">{PassWarderror}</span>
+                        ) :""}
+                    </span>
                   </div>
                 ) : (
                   <div className="flex flex-col mt-2 relative">
@@ -78,10 +99,19 @@ const Registration = () => {
                       className="px-2 py-3 border border-amber-900 mt-2 rounded-sm"
                       onChange={Takeinput}
                     />
+                    {information.name === "Email" && email == "" ? (
+                      <span className="text-red-600">{emailerror}</span>
+                    ) : information.name === "Fullname" && fullname == "" ? (
+                      <span className="text-red-600">{FullNameerror}</span>
+                    ) : 
+                          ""
+                        
+                    }
                   </div>
                 )
               )}
               <Button
+                SignHandle={handleSignup}
                 content={"Sign Up"}
                 design={
                   "pt-[20px] pb-[20px] pr-[140px] pl-[140px] rounded-[85px] bg-blue text-[21px] font-semibold text-white mt-[52px] cursor-pointer"

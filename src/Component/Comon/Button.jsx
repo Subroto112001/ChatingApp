@@ -1,9 +1,12 @@
 import React from 'react'
 
-const Button = ({ design, content }) => {
+const Button = ({ design, content, SignHandle }) => {
   return (
     <>
-      <button className={design}> {content}</button>
+      <button className={design} onClick={SignHandle}>
+
+        {content}
+      </button>
     </>
   );
 };
