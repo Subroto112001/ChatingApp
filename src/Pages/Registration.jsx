@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+import { toast, Bounce } from "react-toastify";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification,
+} from "firebase/auth";
 
 import ChatingImage from "../assets/Chating.jpg";
 import { Registrationinput } from "../lib/Registrationfrom";
 import { FaEye } from "react-icons/fa";
 import Button from "../Component/Comon/Button";
+
 const Registration = () => {
+  const auth = getAuth();
+
   const information = Registrationinput();
 
   const [email, setemail] = useState("");
@@ -14,6 +24,7 @@ const Registration = () => {
   const [emailerror, setEmailError] = useState("");
   const [FullNameerror, setFullNameError] = useState("");
   const [PassWarderror, setPassWardError] = useState("");
+  const [loadeing, setLoadeing] = useState(false);
 
   const Takeinput = (event) => {
     const { name, value } = event.target;
@@ -27,17 +38,62 @@ const Registration = () => {
     }
   };
 
- const handleSignup=()=>{
-   if ( !email) {
-  setEmailError("Email is missing");
-   } else if (!fullname) {
-     setFullNameError("Full Name is missing");
-   } else if (!passward) {
-     setPassWardError("Passward is missing");
-   } else {
- alert("Sucsesfully done");
-   }
-}
+  const handleSignup = () => {
+    if (!email) {
+      setEmailError("Email is missing");
+    } else if (!fullname) {
+      setFullNameError("Full Name is missing");
+    } else if (!passward) {
+      setPassWardError("Passward is missing");
+    } else {
+      setLoadeing(true);
+      setEmailError("");
+      setEmailError("");
+      setPassWardError("");
+
+      createUserWithEmailAndPassword(auth, email, passward)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+
+          updateProfile(auth.currentUser, {
+            displayName: "Jane Q. User",
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          });
+        })
+        .then(() => {
+          toast.success(`🦄 ${fullname} SignUp Sucessfull`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
+          return sendEmailVerification(auth.currentUser);
+        })
+        .then((mailinfo) => {
+          console.log(`mail sent into your mail ${mailinfo}`);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+        })
+        .finally(() => {
+          alert("done");
+          setemail("");
+          setfullname("");
+          setpassward("");
+          setLoadeing(false);
+        });
+    }
+  };
+
+  console.log(auth.currentUser);
 
   const EyeShow = () => {
     seteye(!eye);
@@ -78,10 +134,16 @@ const Registration = () => {
                       <FaEye />
                     </div>
                     <span className="text-red-600">
-                      {information.name =
-                        "Passward" && passward == "" ? (
-                          <span className="text-red-600">{PassWarderror}</span>
-                        ) :""}
+                      {
+                        (information.name =
+                          "Passward" && passward == "" ? (
+                            <span className="text-red-600">
+                              {PassWarderror}
+                            </span>
+                          ) : (
+                            ""
+                          ))
+                      }
                     </span>
                   </div>
                 ) : (
@@ -103,20 +165,29 @@ const Registration = () => {
                       <span className="text-red-600">{emailerror}</span>
                     ) : information.name === "Fullname" && fullname == "" ? (
                       <span className="text-red-600">{FullNameerror}</span>
-                    ) : 
-                          ""
-                        
-                    }
+                    ) : (
+                      ""
+                    )}
                   </div>
                 )
               )}
-              <Button
-                SignHandle={handleSignup}
-                content={"Sign Up"}
-                design={
-                  "pt-[20px] pb-[20px] pr-[140px] pl-[140px] rounded-[85px] bg-blue text-[21px] font-semibold text-white mt-[52px] cursor-pointer"
-                }
-              />
+              {loadeing ? (
+                <Button
+                  content={"Loading"}
+                  design={
+                    "pt-[20px] pb-[20px] pr-[140px] pl-[140px] rounded-[85px] bg-blue text-[21px] font-semibold text-white mt-[52px] cursor-pointer"
+                  }
+                />
+              ) : (
+                <Button
+                  SignHandle={handleSignup}
+                  content={"Sign Up"}
+                  design={
+                    "pt-[20px] pb-[20px] pr-[140px] pl-[140px] rounded-[85px] bg-blue text-[21px] font-semibold text-white mt-[52px] cursor-pointer"
+                  }
+                />
+              )}
+
               <h1 className="text-[14px] font-normal text-center mt-[35px]">
                 Already have an account ?{" "}
                 <span className="font-bold text-sign">Sign In</span>
