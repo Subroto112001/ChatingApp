@@ -11,6 +11,7 @@ import ChatingImage from "../assets/Chating.jpg";
 import { Registrationinput } from "../lib/Registrationfrom";
 import { FaEye } from "react-icons/fa";
 import Button from "../Component/Comon/Button";
+import { NavLink } from "react-router";
 
 const Registration = () => {
   const auth = getAuth();
@@ -190,7 +191,9 @@ const Registration = () => {
 
               <h1 className="text-[14px] font-normal text-center mt-[35px]">
                 Already have an account ?{" "}
-                <span className="font-bold text-sign">Sign In</span>
+                <NavLink to="/login" className="font-bold text-sign">
+                  Sign In
+                </NavLink>
               </h1>
             </div>
           </div>

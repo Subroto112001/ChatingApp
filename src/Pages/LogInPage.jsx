@@ -1,11 +1,52 @@
 import React, { useState } from 'react'
 import InputBox from '../Component/Comon/InputBox'
 import Login from "../assets/Login.jpg"
-import { FaGoogle } from 'react-icons/fa';
+
 import { FcGoogle } from 'react-icons/fc';
 import Button from '../Component/Comon/Button';
+import { NavLink } from 'react-router';
+
+import { LoginInfo } from '../lib/LoginInfo';
+import { IoInformation } from 'react-icons/io5';
+
 function LogInPage() {
    
+
+const loginInput = LoginInfo();
+
+  const [login, setLogin] = useState({
+    Email: "",
+    Password: "",
+  });
+
+ const [loginError, setLoginError] = useState({
+   Emailerror: "",
+   Passworderror: "",
+ });
+
+console.log(login);
+
+  const HandleLoginInput = (e) => {
+    const { id, value } = event.target
+    setLogin({
+      ...login,
+      [id]: value,
+    });
+    
+  console.log(`your id is ${id} and your value is ${value}`);
+  
+  }
+  
+
+  const ErrorHandaler = () => {
+    const { Email, Password } = login
+    if (!Email) {
+      setLoginError({...loginError, Emailerror : "Bhaia Apnar Email den nai" });
+    } else if (!Password) {
+      setLoginError({...loginError, Passworderror: "Bhaia PassWord ta diben to naki"})
+    }
+  }
+
   return (
     <>
       <div className="container">
@@ -21,16 +62,49 @@ function LogInPage() {
                 </span>
                 &nbsp;
                 <h4 className="font-semibold text-[13px] text-Second">
-                  {" "}
                   Login with Google
                 </h4>
               </div>
-              <InputBox Design={"w-[352px]"} LabelData={`Email Adress`} />
-              <InputBox
-                Design={"w-[352px]"}
-                LabelData={`Enter Your PassWord`}
-              />
+              {loginInput.map((logininfo) => (
+                <div className="flex flex-col ">
+                  <label htmlFor="#" className="bg-white">
+                    {logininfo.name} <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    onChange={HandleLoginInput}
+                    id={logininfo.name}
+                    className=" px-2 py-3  border border-amber-900 mt-2 rounded-sm"
+                    type={logininfo.name === "Email" ? "email" : "password"}
+                    placeholder={
+                      logininfo.name == "Email"
+                        ? "Enter Your Email"
+                        : "Enter Your Password"
+                    }
+                  />
+                  {(logininfo.name == "Email" && loginError.Emailerror && (
+                    <span className=" rounded text-[20px] font-semibol mt-2 text-red-500">
+                      {loginError.Emailerror}
+                    </span>
+                  )) ||
+                    (logininfo.name == "Password" &&
+                      loginError.Passworderror && (
+                        <span className=" rounded mt-2 text-[20px] font-semibold text-red-500">
+                          {loginError.Passworderror}
+                        </span>
+                      ))}
+                </div>
+              ))}
+              <p className="mt-4">
+                Don't have an account? &nbsp;
+                <NavLink
+                  to="/signup"
+                  className="text-[#5F35F5] cursor-pointer hover:underline"
+                >
+                  Sign up
+                </NavLink>
+              </p>
               <Button
+                SignHandle={ErrorHandaler}
                 content={"Log In"}
                 design={
                   "pt-[20px] pb-[20px] pr-[140px] pl-[140px] rounded-[8px] bg-blue text-[21px] font-semibold text-white mt-[52px] cursor-pointer"
