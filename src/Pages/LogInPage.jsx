@@ -44,6 +44,9 @@ console.log(login);
       setLoginError({...loginError, Emailerror : "Bhaia Apnar Email den nai" });
     } else if (!Password) {
       setLoginError({...loginError, Passworderror: "Bhaia PassWord ta diben to naki"})
+    } else {
+      setLoginError({ ...loginError, Emailerror: "", Passworderror: "" });
+      
     }
   }
 
