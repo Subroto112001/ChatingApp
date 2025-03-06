@@ -14,12 +14,13 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-
+import { getDatabase, ref, set } from "firebase/database";
 import { Sucesstoast } from '../lib/Toast';
 
 function LogInPage() {
    
-const auth = getAuth();
+  const auth = getAuth();
+  const database = getDatabase();
 const loginInput = LoginInfo();
 
   const [login, setLogin] = useState({
@@ -69,7 +70,13 @@ const loginInput = LoginInfo();
   
   const HandleGoogleLOgin = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((userinfo) => {
+    signInWithPopup(auth, provider)
+      .then((userinfo) => {
+         set(ref(database, "users/"), {
+           username: "Skbarman",
+           email: "email@gmail.com",
+           profile_picture: "imageUrl",
+         });
       console.log(userinfo);
       
     }).catch((err) => {
