@@ -3,6 +3,7 @@ import Registration from "./Pages/Registration";
 import LogInPage from "./Pages/LogInPage";
 import { BrowserRouter, Routes, Route } from "react-router";
 import HomPages from "./Pages/HomPages";
+import Home from "./Pages/Home";
 
 const App = () => {
   return (
@@ -10,7 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/signup" element={<Registration />} />
         <Route path="/login" element={<LogInPage />} />
-        <Route path="/home" element={<HomPages />} />
+        <Route path="/home" element={<Home />} />
        
         
    

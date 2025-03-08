@@ -9,31 +9,21 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Profilegroup from "../assets/FriendGroup.jpg"
 import ProfilePicture2 from '../assets/GroupPicture2.jpg'
 import ProfileCar from '../assets/CarProfile.jpg'
+import { FaHome } from 'react-icons/fa';
+import { FiMessageSquare } from 'react-icons/fi';
+import { FaGear } from 'react-icons/fa6';
+import { ImExit } from 'react-icons/im';
+import Slidebar from '../Component/HomePageComponent/Slidebar';
 
 const Home = () => {
+
+ 
+
   return (
     <div>
       <div className="conatiner">
-        <div className="flex gap-x-[45px]">
-          <div className="Slidebar w-[10%] h-[100%] bg-blue rounded-md flex flex-col items-center ">
-            <div>
-              <img
-                src={ProfileImage}
-                className="w-[100px] h-[90px] mt-[20px] rounded-full"
-              />
-            </div>
-            <div className="flex flex-col justify-center items-center  mt-[78px] gap-y-[82px]">
-              <div className=" bg-white pt-[20px] pb-[20px] pr-[45px] pl-[45px] bordericon">
-                <IoHomeOutline className="text-blue text-2xl" />
-              </div>
-
-              <RiMessage2Fill className="text-2xl text-[#BAD1FF]" />
-              <RiMessage2Fill className="text-2xl text-[#BAD1FF]" />
-              <IoSettingsSharp className="text-2xl text-[#BAD1FF]" />
-              <IoNotifications className="text-2xl text-[#BAD1FF]" />
-              <TbLogout className="mt-[187px] mb-[47px] text-2xl text-white" />
-            </div>
-          </div>
+        <div className="flex h-screen gap-x-[45px]">
+        <Slidebar/>
           <div className="w-[36%] h-screen flex flex-col ">
             <div className="relative">
               <input
