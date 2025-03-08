@@ -38,7 +38,7 @@ const Slidebar = () => {
 
   return (
     <>
-      <div className="Slidebar w-[10%]  bg-blue rounded-md flex flex-col items-center ">
+      <div className="Slidebar w-[10%] h-[96dvh] bg-blue rounded-md flex flex-col items-center ">
         <div className="w-[70px] h-[70px] relative cursor-pointer rounded-full  mt-10 group">
           <picture>
             <img
