@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Home from "./Component/AplicationPages/Home"
 
 import AplicationPages from "./Pages/AplicationPages";
+import Message from "./Component/AplicationPages/Message";
 
 const App = () => {
   return (
@@ -14,8 +15,8 @@ const App = () => {
         <Route path="/login" element={<LogInPage />} />
         <Route path="/" element={<AplicationPages />}>
           <Route index element={<Home/>} />
+          <Route path="/message" element={<Message/>} />
           <Route path="/notification" element={"this is notification pages"} />
-          <Route path="/message" element={"this is message pages"} />
           <Route path="/settings" element={"this is settings pages"} />
         </Route>
       </Routes>

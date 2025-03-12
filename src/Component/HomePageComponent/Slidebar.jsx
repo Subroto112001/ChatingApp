@@ -20,13 +20,13 @@ const location = useLocation()
       },
       {
         id: 2,
-        path: "/notification",
-        icon: <IoNotifications />,
+        path: "/message",
+        icon: <FiMessageSquare />,
       },
       {
         id: 3,
-        path: "/message",
-        icon: <FiMessageSquare />,
+        path: "/notification",
+        icon: <IoNotifications />,
       },
       {
         id: 4,
