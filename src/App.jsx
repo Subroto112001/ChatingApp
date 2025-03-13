@@ -6,6 +6,7 @@ import Home from "./Component/AplicationPages/Home"
 
 import AplicationPages from "./Pages/AplicationPages";
 import Message from "./Component/AplicationPages/Message";
+import Notification from "./Component/AplicationPages/Notification";
 
 const App = () => {
   return (
@@ -16,7 +17,7 @@ const App = () => {
         <Route path="/" element={<AplicationPages />}>
           <Route index element={<Home/>} />
           <Route path="/message" element={<Message/>} />
-          <Route path="/notification" element={"this is notification pages"} />
+          <Route path="/notification" element={<Notification/>} />
           <Route path="/settings" element={"this is settings pages"} />
         </Route>
       </Routes>

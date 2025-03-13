@@ -5,22 +5,16 @@ import ProfilePicture2 from "../../assets/GroupPicture2.jpg";
 import ProfileCar from "../../assets/CarProfile.jpg";
 import { IoIosSearch } from 'react-icons/io';
 import GroupElimetn from '../Eliment/HomePageEliment/GroupElimetn';
+import InputboxForpages from '../Comon/InputboxForpages';
 const GroupContet = () => {
   
   return (
     <>
       <div className="flex justify-between items-center">
         <div className="w-[36%]  flex flex-col ">
-          <div className="relative">
-            <input
-              type="search"
-              className="rounded-3xl border pl-[78px] pr-[23px] pb-[18px] pt-[18px] w-full border-none outline-none shadow-[0px_7px_6px_-2px_rgba(0,_0,_0,_0.1)]"
-              placeholder="Search Here"
-            />
-            <IoIosSearch className="absolute top-[35%] left-[20px] text-2xl" />
-
-            <BsThreeDotsVertical className="absolute top-[40%] right-[35px] text-blue" />
-          </div>
+          <InputboxForpages
+            SearchIconClass={"absolute top-[35%] left-[20px] text-2xl"}
+          />
 
           {/* firends group zonde */}
           <GroupElimetn
