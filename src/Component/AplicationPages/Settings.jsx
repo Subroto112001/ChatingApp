@@ -28,6 +28,7 @@ const Settings = () => {
                 <h3 className="text-[25px] text-black font-semibold">
                   A B M Shawon Islam
                 </h3>
+    <p>Programmer</p>
               </div>
             </div>
           </div>
