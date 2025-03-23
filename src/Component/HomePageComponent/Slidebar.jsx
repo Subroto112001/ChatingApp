@@ -7,10 +7,11 @@ import { FaGear } from "react-icons/fa6";
 import { ImExit } from "react-icons/im";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { getAuth, signOut } from "firebase/auth";
 const Slidebar = () => {
   const pagenavigate = useNavigate();
   const location = useLocation();
-
+const auth = getAuth();
   const elimentofSlidebar = [
     {
       id: 1,
@@ -85,6 +86,18 @@ const Slidebar = () => {
   }, []);
   console.log(window.cloudinary);
 
+  // LogOut fucntion in here
+  const handleLogOut = () => {
+
+    signOut(auth).then((result) => {
+      console.log("result");
+      pagenavigate("/login");
+    }).catch((err) => {
+      console.log(err);
+      
+    });
+  };
+
   return (
     <>
       <div className="Slidebar w-[10%] h-[96dvh] bg-blue rounded-md flex flex-col items-center ">
@@ -110,7 +123,7 @@ const Slidebar = () => {
                 <div
                   className="text-[29px] text-white mt-20 cursor-pointer"
                   key={item.id}
-                  onClick={() => handleNavigatePage(item.path)}
+                  onClick={handleLogOut}
                 >
                   {item.icon}
                 </div>

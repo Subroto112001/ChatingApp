@@ -4,7 +4,7 @@ import Login from "../assets/Login.jpg"
 
 
 import Button from '../Component/Comon/Button';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 
 import { LoginInfo } from '../lib/LoginInfo';
 
@@ -14,15 +14,15 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, push, ref, set } from "firebase/database";
 import { Sucesstoast } from '../lib/Toast';
 
 function LogInPage() {
    
   const auth = getAuth();
-  const database = getDatabase();
+  const db = getDatabase();
 const loginInput = LoginInfo();
-
+const navigate = useNavigate()
   const [login, setLogin] = useState({
     Email: "",
     Password: "",
@@ -59,7 +59,8 @@ const loginInput = LoginInfo();
       signInWithEmailAndPassword(auth, Email, Password)
         .then((userinfo) => {
           Sucesstoast("Login Done");
-        console.log(userinfo);
+          console.log(userinfo);
+          navigate("/");
         
       }).catch((error) => {
         console.log(error);
@@ -72,11 +73,15 @@ const loginInput = LoginInfo();
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((userinfo) => {
-         set(ref(database, "users/"), {
-           username: "Skbarman",
-           email: "email@gmail.com",
-           profile_picture: "imageUrl",
-         });
+      const {user} = userinfo
+         let userRef = push(ref(db, "users/"))
+                   set(userRef, {
+                     username: user.displayName || fullname,
+                     email: user.email || email,
+                     profile_picture: user.photoURL,
+                     userUid: user.uid,
+                   });
+         navigate("/");
       console.log(userinfo);
       
     }).catch((err) => {

@@ -6,14 +6,15 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
-
+import { getDatabase, push, ref, set } from "firebase/database";
 import ChatingImage from "../assets/Chating.jpg";
 import { Registrationinput } from "../lib/Registrationfrom";
 import { FaEye } from "react-icons/fa";
 import Button from "../Component/Comon/Button";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const Registration = () => {
+   const db = getDatabase();
   const auth = getAuth();
 
   const information = Registrationinput();
@@ -26,7 +27,7 @@ const Registration = () => {
   const [FullNameerror, setFullNameError] = useState("");
   const [PassWarderror, setPassWardError] = useState("");
   const [loadeing, setLoadeing] = useState(false);
-
+const navigate = useNavigate()
   const Takeinput = (event) => {
     const { name, value } = event.target;
 
@@ -74,10 +75,28 @@ const Registration = () => {
             theme: "light",
             transition: Bounce,
           });
-          return sendEmailVerification(auth.currentUser);
+          let userRef = push(ref(db, "users/"))
+           set(userRef, {
+             username: auth.currentUser.displayName || fullname,
+             email: auth.currentUser.email || email,
+             profile_picture: `https://www.pexels.com/photo/modern-portrait-in-moroccan-architectural-setting-30767037/`,
+             userUid: auth.currentUser.uid,
+           });
+           sendEmailVerification(auth.currentUser);
         })
-        .then((mailinfo) => {
-          console.log(`mail sent into your mail ${mailinfo}`);
+        .then(() => {
+         toast.success(`🦄 mail sent successfully. Check Your mail`, {
+           position: "top-left",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: false,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "light",
+           transition: Bounce,
+         });
+          navigate("/login");
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -85,7 +104,7 @@ const Registration = () => {
           console.log(errorCode, errorMessage);
         })
         .finally(() => {
-          alert("done");
+        
           setemail("");
           setfullname("");
           setpassward("");
