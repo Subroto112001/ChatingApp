@@ -6,12 +6,17 @@ import { FiMessageSquare } from "react-icons/fi";
 import { FaGear } from "react-icons/fa6";
 import { ImExit } from "react-icons/im";
 import { useState } from "react";
+import { getDatabase, ref, onValue } from "firebase/database";
 import { useLocation, useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
 const Slidebar = () => {
+  const db = getDatabase();
   const pagenavigate = useNavigate();
   const location = useLocation();
-const auth = getAuth();
+  const auth = getAuth();
+const [userData, setUserData]  = useState({})
+
+
   const elimentofSlidebar = [
     {
       id: 1,
@@ -40,13 +45,17 @@ const auth = getAuth();
     },
   ];
 
+  /*
+   * todo : handleNavigatePage function will navigate diffrent path
+   */
+
   const handleNavigatePage = (path = "/") => {
     console.log(path);
     pagenavigate(path);
   };
 
   /*
-   * todo : handleUploadImage
+   * todo : handleUploadImage function will upload our selected image
    */
   const handleUploadImage = () => {
     cloudinary.openUploadWidget(
@@ -78,6 +87,9 @@ const auth = getAuth();
       }
     );
   };
+
+  //cloydinary script will add in our file by this code
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = `https://upload-widget.cloudinary.com/latest/global/all.js`;
@@ -88,23 +100,53 @@ const auth = getAuth();
 
   // LogOut fucntion in here
   const handleLogOut = () => {
-
-    signOut(auth).then((result) => {
-      console.log("result");
-      pagenavigate("/login");
-    }).catch((err) => {
-      console.log(err);
-      
-    });
+    signOut(auth)
+      .then((result) => {
+        console.log("result");
+        pagenavigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
+/**
+ * todo : fetching data 
+ * here we will use useEffect
+ * it will upload images when we will log in by mail
+ * this fuction will collect image and set it in our profile image side
+ */
+  
+  useEffect(() => {
+    const fetchdata = () => {
+      const UseRef = ref(db, "users/");
+      onValue(UseRef, (snapshot) => {
+        let userBlankinfo = null
+     
+        snapshot.forEach((item) => {
+          if (item.val().userUid === auth.currentUser.uid) {
+            
+            userBlankinfo = { ...item.val(), userKey: item.key };
+          }
+        
+         
+       })
+       setUserData(userBlankinfo);
+      });
+    }
+    fetchdata()
+  }, [])
+  
+  
+  console.log(userData);
+  
   return (
     <>
       <div className="Slidebar w-[10%] h-[96dvh] bg-blue rounded-md flex flex-col items-center ">
         <div className="w-[70px] h-[70px] relative cursor-pointer rounded-full  mt-10 group">
           <picture>
             <img
-              src={ProfileImage}
+              src={userData? userData.profile_picture : ProfileImage}
               alt={ProfileImage}
               className="w-full h-full rounded-full object-cover "
             />

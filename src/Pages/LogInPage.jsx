@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-import Login from "../assets/Login.jpg"
+import Login from "../assets/Login.jpg";
 
+import Button from "../Component/Comon/Button";
+import { NavLink, useNavigate } from "react-router";
 
-import Button from '../Component/Comon/Button';
-import { NavLink, useNavigate } from 'react-router';
-
-import { LoginInfo } from '../lib/LoginInfo';
+import { LoginInfo } from "../lib/LoginInfo";
 
 import {
   getAuth,
@@ -15,81 +14,80 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { getDatabase, push, ref, set } from "firebase/database";
-import { Sucesstoast } from '../lib/Toast';
+import { Sucesstoast } from "../lib/Toast";
 
 function LogInPage() {
-   
   const auth = getAuth();
   const db = getDatabase();
-const loginInput = LoginInfo();
-const navigate = useNavigate()
+  const loginInput = LoginInfo();
+  const navigate = useNavigate();
   const [login, setLogin] = useState({
     Email: "",
     Password: "",
   });
 
- const [loginError, setLoginError] = useState({
-   Emailerror: "",
-   Passworderror: "",
- });
+  const [loginError, setLoginError] = useState({
+    Emailerror: "",
+    Passworderror: "",
+  });
 
-// console.log(login);
+  // console.log(login);
 
   const HandleLoginInput = (e) => {
-    const { id, value } = e.target
+    const { id, value } = e.target;
     setLogin({
       ...login,
       [id]: value,
     });
-    
-  // console.log(`your id is ${id} and your value is ${value}`);
-  
-  }
-  
+
+    // console.log(`your id is ${id} and your value is ${value}`);
+  };
 
   const ErrorHandaler = () => {
-    const { Email, Password } = login
+    const { Email, Password } = login;
     if (!Email) {
-      setLoginError({...loginError, Emailerror : "Bhaia Apnar Email den nai" });
+      setLoginError({ ...loginError, Emailerror: "Bhaia Apnar Email den nai" });
     } else if (!Password) {
-      setLoginError({...loginError,Emailerror: "", Passworderror: "Bhaia PassWord ta diben to naki"})
+      setLoginError({
+        ...loginError,
+        Emailerror: "",
+        Passworderror: "Bhaia PassWord ta diben to naki",
+      });
     } else {
       setLoginError({ ...loginError, Emailerror: "", Passworderror: "" });
-     const { Email, Password } = login;
+      const { Email, Password } = login;
       signInWithEmailAndPassword(auth, Email, Password)
         .then((userinfo) => {
-          Sucesstoast("Login Done");
+          Sucesstoast("Login Done normal");
           console.log(userinfo);
           navigate("/");
-        
-      }).catch((error) => {
-        console.log(error);
-        
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-  }
-  
+  };
+
   const HandleGoogleLOgin = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((userinfo) => {
-      const {user} = userinfo
-         let userRef = push(ref(db, "users/"))
-                   set(userRef, {
-                     username: user.displayName || fullname,
-                     email: user.email || email,
-                     profile_picture: user.photoURL,
-                     userUid: user.uid,
-                   });
-         navigate("/");
-      console.log(userinfo);
-      
-    }).catch((err) => {
-      console.log(`error from google log in ${err}`);
-      
-    });
-    
-}
+        const { user } = userinfo;
+        let userRef = push(ref(db, "users/"));
+        set(userRef, {
+          username: user.displayName || fullname,
+          email: user.email || email,
+          profile_picture: user.photoURL,
+          userUid: user.uid,
+        });
+          Sucesstoast("Login Done Google");
+        navigate("/");
+        console.log(userinfo);
+      })
+      .catch((err) => {
+        console.log(`error from google log in ${err}`);
+      });
+  };
 
   return (
     <>
@@ -102,7 +100,8 @@ const navigate = useNavigate()
               </h1>
               <button
                 type="button"
-                className="text-white cursor-pointer mt-4 mb-4 bg-[#4285F4] hover:bg-[#4285F4]/90  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center  " onClick={HandleGoogleLOgin}
+                className="text-white cursor-pointer mt-4 mb-4 bg-[#4285F4] hover:bg-[#4285F4]/90  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center  "
+                onClick={HandleGoogleLOgin}
               >
                 <svg
                   className="w-4 h-4 me-2"
@@ -177,4 +176,4 @@ const navigate = useNavigate()
   );
 }
 
-export default LogInPage
+export default LogInPage;
