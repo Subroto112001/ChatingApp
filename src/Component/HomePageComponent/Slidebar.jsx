@@ -146,8 +146,8 @@ const [userData, setUserData]  = useState({})
         <div className="w-[70px] h-[70px] relative cursor-pointer rounded-full  mt-10 group">
           <picture>
             <img
-              src={userData? userData.profile_picture : ProfileImage}
-              alt={ProfileImage}
+              src={userData ? userData.profile_picture : ProfileImage}
+              alt="ProfilePicture"
               className="w-full h-full rounded-full object-cover "
             />
           </picture>
@@ -158,6 +158,10 @@ const [userData, setUserData]  = useState({})
             <IoCloudUpload />
           </span>
         </div>
+        <h1 className="text-[22px] font-medium text-white">
+          {userData? userData.username: "Your Name"}
+        </h1>
+
         <div className="flex flex-col justify-center items-center  mt-10 gap-y-10">
           <div className="flex flex-col justify-center gap-[30px] items-center">
             {elimentofSlidebar?.map((item, index) =>

@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Profilegroup from "../../../assets/FriendGroup.jpg";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+import LoadingSkeliton from '../Skeliton/LoadingSkeliton';
 const GroupElimetn = ({
   BtnStyle,
   CardEliment,
@@ -13,7 +15,39 @@ const GroupElimetn = ({
   PeraText,
   peraStyle,
 }) => {
+  const [userlist, setUserlist] = useState([]);
+  const [loading, setLoading] =useState(false)
+  const db = getDatabase();
+
+  useEffect(() => {
+     setLoading(true);
+      const fetchdata = () => {
+        const UseRef = ref(db, "users/");
+        onValue(UseRef, (snapshot) => {
+          let userBlanklist = []
+       
+          snapshot.forEach((item) => {
+            
+              
+          userBlanklist.push({...item.val(), userKey: item.key})
+          
+           
+         })
+          setUserlist(userBlanklist);
+           setLoading(false);
+        });
+      }
+      fetchdata()
+    }, [])
+    console.log(userlist);
+    
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
+
+
+
+  if (loading) {
+    return <LoadingSkeliton/>
+  }
   return (
     <>
       <div className="Group  mt-[20px]">
@@ -47,9 +81,7 @@ const GroupElimetn = ({
                   </picture>
                   <div>
                     <h3 className={HeaderName}>Friends Reunion</h3>
-                    <p className={Subheader}>
-                      Hi Guys, Wassup!
-                    </p>
+                    <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
                 <button className={BtnStyle}>{ButtonText}</button>
