@@ -71,13 +71,13 @@ const GroupElimetn = ({
                 }
                 key={index}
               >
-                <div className="flex justify-center items-center  gap-[14px]">
+                <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
                       src={Profilegroup}
                       alt={Profilegroup}
                       className={CardEliment}
-                    />
+                     />
                   </picture>
                   <div>
                     <h3 className={HeaderName}>Friends Reunion</h3>
