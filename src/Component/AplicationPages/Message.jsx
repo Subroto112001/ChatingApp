@@ -57,7 +57,7 @@ const Message = () => {
         {/* message */}
         <div className="flex mt-[56px] justify-between ">
           <div className="bg-gray-100 text-black px-4 py-2 rounded-lg relative">
-            Hey There !
+            Hey There what's upp !
             <div
               className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 w-0 h-0 
                         border-t-8 border-t-transparent border-b-8 border-b-transparent 
