@@ -11,6 +11,8 @@ import Settings from "./Component/AplicationPages/Settings";
 import SettingsRoute from "./Component/AplicationPages/SettingsRoute";
 import Starter from "./Component/Eliment/SettingsEliment/Starter";
 import EditProfile from "./Component/Eliment/SettingsEliment/EditProfile";
+import ProfilePhoto from "./Component/Eliment/SettingsEliment/ProfilePhoto";
+import ProfileStatus from "./Component/Eliment/SettingsEliment/ProfileStatus";
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
           <Route path="/settings" element={<SettingsRoute />}>
             <Route path="/settings" element={<Starter />} />
             <Route path="/settings/edit" element={<EditProfile />} />
+            <Route path="/settings/prophoto" element={<ProfilePhoto />} />
+            <Route path="/settings/status" element={<ProfileStatus />} />
           </Route>
         </Route>
       </Routes>

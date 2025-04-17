@@ -53,13 +53,19 @@ const Settings = () => {
                   </span>
                   Edit Profile Name
                 </h4>
-                <h4 className="flex items-center text-[20px] text-black font-normal gap-[37px]  hover:cursor-pointer">
+                <h4
+                  className="flex items-center text-[20px] text-black font-normal gap-[37px]  hover:cursor-pointer"
+                  onClick={() => handleNavigatePage("/settings/status")}
+                >
                   <span>
                     <TbMessageReportFilled />
                   </span>
                   Edit Profile Status Info.
                 </h4>
-                <h4 className="flex items-center text-[20px] text-black font-normal gap-[37px]  hover:cursor-pointer">
+                <h4
+                  className="flex items-center text-[20px] text-black font-normal gap-[37px]  hover:cursor-pointer"
+                  onClick={() => handleNavigatePage("/settings/prophoto")}
+                >
                   <span>
                     <TbPhotoEdit />
                   </span>

@@ -9,25 +9,7 @@ const EditProfile = () => {
           Change Profile Information
         </h3>
 
-        <div className="avatar flex mt-9 justify-center">
-          <span>
-            <RxAvatar className="font-bold text-7xl" />
-          </span>
-        </div>
-        <div class="flex  flex-col gap-3 items-center mt-6 ">
-          <button
-            type="button"
-            class="py-2 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 "
-          >
-            Change picture
-          </button>
-          <button
-            type="button"
-            class="py-2 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "
-          >
-            Delete picture
-          </button>
-        </div>
+       
 
         <div className="informationbox flex justify-center items-center gap-3 mt-9">
           <div class="left flex flex-col items-center gap-3 ">
