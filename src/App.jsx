@@ -8,6 +8,9 @@ import AplicationPages from "./Pages/AplicationPages";
 import Message from "./Component/AplicationPages/Message";
 import Notification from "./Component/AplicationPages/Notification";
 import Settings from "./Component/AplicationPages/Settings";
+import SettingsRoute from "./Component/AplicationPages/SettingsRoute";
+import Starter from "./Component/Eliment/SettingsEliment/Starter";
+import EditProfile from "./Component/Eliment/SettingsEliment/EditProfile";
 
 const App = () => {
   return (
@@ -19,7 +22,10 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/message" element={<Message />} />
           <Route path="/notification" element={<Notification />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/settings" element={<SettingsRoute />}>
+            <Route path="/settings" element={<Starter />} />
+            <Route path="/settings/edit" element={<EditProfile />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

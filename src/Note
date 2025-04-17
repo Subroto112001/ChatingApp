@@ -1,409 +1,105 @@
- <div className="w-[27%] h-screen">
-            {/* group up */}
-            <div className="Group">
-              <div className="rounded-[20px] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] p-[25px] flex flex-col gap-y-[12px]">
-                <div className="Header flex justify-between items-center">
-                  <h2 className="text-[20px] font-semibold text-black">
-                    Group
-                  </h2>
-                  <BsThreeDotsVertical className=" text-blue" />
+  <div class="w-full h-[83dvh] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] rounded-[20px] ">
+        <div class="py-1">
+          <div class="p-2 md:p-4">
+            <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+              <div class="grid max-w-2xl mx-auto mt-8">
+                <div class="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
+                  {/* image will be here */}
+
+                  <div class="flex gap-3 items-center ">
+                    <button
+                      type="button"
+                      class="py-2 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200 "
+                    >
+                      Change picture
+                    </button>
+                    <button
+                      type="button"
+                      class="py-2 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200 "
+                    >
+                      Delete picture
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                  <div className="flex justify-center items-center gap-x-[14px]">
-                    <picture>
-                      <img
-                        src={Profilegroup}
-                        alt={Profilegroup}
-                        className="w-[52px] h-[52px] rounded-full"
+
+                <div class="items-center mt-8 sm:mt-14 text-[#202142]">
+                  <div class="flex flex-col items-center ">
+                    <div class="w-full">
+                      <label
+                        for="first_name"
+                        class="block mb-2 text-sm font-medium text-indigo-900"
+                      >
+                        Your first name
+                      </label>
+                      <input
+                        type="text"
+                        id="first_name"
+                        class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                        placeholder="Your first name"
+                        value="Jane"
                       />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
                     </div>
-                  </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfilePicture2}
-                        alt={ProfilePicture2}
-                        className="w-[52px] h-[52px] rounded-full"
+
+                    <div class="w-full">
+                      <label
+                        for="last_name"
+                        class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                      >
+                        Your last name
+                      </label>
+                      <input
+                        type="text"
+                        id="last_name"
+                        class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                        placeholder="Your last name"
+                        value="Ferguson"
+                        required
                       />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
                     </div>
                   </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfileCar}
-                        alt={ProfileCar}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
+
+                  <div class="mb-2 sm:mb-6">
+                    <label
+                      for="email"
+                      class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >
+                      Your email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                      placeholder="your.email@mail.com"
+                      required
+                    />
                   </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[70.5px]   ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfileCar}
-                        alt={ProfileCar}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
+
+                  <div class="mb-2 sm:mb-6">
+                    <label
+                      for="profession"
+                      class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >
+                      Profession
+                    </label>
+                    <input
+                      type="text"
+                      id="profession"
+                      class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 "
+                      placeholder="your profession"
+                    />
                   </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-              </div>
-            </div>
-            {/* Group down */}
-            <div className="Group mt-[43px]">
-              <div className="rounded-[20px] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] p-[25px] flex flex-col gap-y-[12px]">
-                <div className="Header flex justify-between items-center">
-                  <h2 className="text-[20px] font-semibold text-black">
-                    Group
-                  </h2>
-                  <BsThreeDotsVertical className=" text-blue" />
-                </div>
-                <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                  <div className="flex justify-center items-center gap-x-[14px]">
-                    <picture>
-                      <img
-                        src={Profilegroup}
-                        alt={Profilegroup}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfilePicture2}
-                        alt={ProfilePicture2}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfileCar}
-                        alt={ProfileCar}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-                <div className="flex items-center  justify-between pb-[70.5px]   ">
-                  <div className="flex justify-center items-center gap-[14px]">
-                    <picture>
-                      <img
-                        src={ProfileCar}
-                        alt={ProfileCar}
-                        className="w-[52px] h-[52px] rounded-full"
-                      />
-                    </picture>
-                    <div>
-                      <h3 className="text-[14px] font-bold text-black">
-                        Friends Reunion
-                      </h3>
-                      <p className="text-[12px] font-medium text-sms">
-                        Hi Guys, Wassup!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-[10px]">Today, 8:56pm</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-[27%] h-screen">
-            <div>
-              <div className="Group">
-                <div className="rounded-[20px] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] mt-[18px]  pl-[25px] pr-[25px] flex flex-col gap-y-[12px]">
-                  <div className="Header flex justify-between items-center">
-                    <h2 className="text-[20px] font-semibold text-black">
-                      Group
-                    </h2>
-                    <BsThreeDotsVertical className=" text-blue" />
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                    <div className="flex justify-center items-center gap-x-[14px]">
-                      <picture>
-                        <img
-                          src={Profilegroup}
-                          alt={Profilegroup}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfilePicture2}
-                          alt={ProfilePicture2}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between mb-[14px]">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                </div>
-              </div>
-              {/* group down */}
-              <div className="Group mt-[43px]">
-                <div className="rounded-[20px] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] pl-[25px] pr-[25px] pb-[25px] pt-[19px] flex flex-col gap-y-[12px]">
-                  <div className="Header flex justify-between items-center">
-                    <h2 className="text-[20px] font-semibold text-black">
-                      Group
-                    </h2>
-                    <BsThreeDotsVertical className=" text-blue" />
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                    <div className="flex justify-center items-center gap-x-[14px]">
-                      <picture>
-                        <img
-                          src={Profilegroup}
-                          alt={Profilegroup}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px]  bordercolor ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfilePicture2}
-                          alt={ProfilePicture2}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between pb-[13.5px] bordercolor  ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
-                  </div>
-                  <div className="flex items-center  justify-between   ">
-                    <div className="flex justify-center items-center gap-[14px]">
-                      <picture>
-                        <img
-                          src={ProfileCar}
-                          alt={ProfileCar}
-                          className="w-[52px] h-[52px] rounded-full"
-                        />
-                      </picture>
-                      <div>
-                        <h3 className="text-[14px] font-bold text-black">
-                          Friends Reunion
-                        </h3>
-                        <p className="text-[12px] font-medium text-sms">
-                          Hi Guys, Wassup!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-[10px]">Today, 8:56pm</div>
+
+                  <div class="flex justify-end">
+                    <button
+                      type="submit"
+                      class="text-white bg-indigo-700  hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                    >
+                      Save
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
