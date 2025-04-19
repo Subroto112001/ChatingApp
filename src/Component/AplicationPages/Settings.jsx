@@ -4,6 +4,7 @@ import Images from "../../assets/profilesettings.jpg";
 import { FaKey, FaPen, FaRegQuestionCircle } from "react-icons/fa";
 import { TbMessageReportFilled, TbPhotoEdit } from "react-icons/tb";
 import { useNavigate } from "react-router";
+import { RxAvatar } from "react-icons/rx";
 
 const Settings = () => {
 
@@ -26,13 +27,7 @@ const Settings = () => {
               </h3>
               <div className="flex  gap-[31px] mt-[49px] pb-[29px] bordercolor  ">
                 <div className="w-[100px] h-[100px] rounded-full">
-                  <picture>
-                    <img
-                      src={Images}
-                      alt={Images}
-                      className="w-[100%] h-[100%] rounded-full object-cover"
-                    />
-                  </picture>
+                  <RxAvatar className="font-bold text-7xl"/>
                 </div>
                 <div className="flex flex-col ">
                   <h3 className="text-[25px] text-black font-semibold">

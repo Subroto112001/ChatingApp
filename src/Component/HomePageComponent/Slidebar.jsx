@@ -83,7 +83,7 @@ const [userData, setUserData]  = useState({})
           throw new Error("Failed to upload image ");
         }
 
-        console.log(result.info.sucess_url);
+        // console.log(result.info.sucess_url);
       }
     );
   };
@@ -96,17 +96,17 @@ const [userData, setUserData]  = useState({})
     script.async = true;
     document.body.appendChild(script);
   }, []);
-  console.log(window.cloudinary);
+  // console.log(window.cloudinary);
 
   // LogOut fucntion in here
   const handleLogOut = () => {
     signOut(auth)
       .then((result) => {
-        console.log("result");
+        // console.log("result");
         pagenavigate("/login");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -147,7 +147,7 @@ const [userData, setUserData]  = useState({})
           <picture>
             <img
               src={userData ? userData.profile_picture : ProfileImage}
-              alt="ProfilePicture"
+              alt=""
               className="w-full h-full rounded-full object-cover "
             />
           </picture>

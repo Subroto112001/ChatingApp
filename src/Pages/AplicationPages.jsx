@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 
 import Home from "../Component/AplicationPages/Home";
 import Slidebar from "../Component/HomePageComponent/Slidebar";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Errorpage from "../Component/Eliment/ErrorPage/Errorpage";
 const AplicationPages = () => {
   const auth = getAuth();
   const [isVerified, setIsVerified] = useState(false);
-
+const navigate = useNavigate()
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      setIsVerified(user.emailVerified);
+      if (user.emailVerified) {
+        setIsVerified(user.emailVerified);
+      }
+      else {
+        navigate("/login");
+      }
     });
   }, []);
   return (

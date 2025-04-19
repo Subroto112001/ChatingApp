@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import React, { useEffect, useState } from "react";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, onValue, ref, set } from "firebase/database";
-import LoadingSkeliton from '../Skeliton/LoadingSkeliton';
-const GroupElimetn = ({
+import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
+const GroupList = ({
   BtnStyle,
   CardEliment,
   HeaderName,
   BoxStyle,
-    HeaderText,
+  HeaderText,
   Subheader,
   VariantNumber,
   ButtonText,
@@ -16,37 +16,31 @@ const GroupElimetn = ({
   peraStyle,
 }) => {
   const [userlist, setUserlist] = useState([]);
-  const [loading, setLoading] =useState(false)
+  const [loading, setLoading] = useState(false);
   const db = getDatabase();
 
   useEffect(() => {
-     setLoading(true);
-      const fetchdata = () => {
-        const UseRef = ref(db, "users/");
-        onValue(UseRef, (snapshot) => {
-          let userBlanklist = []
-       
-          snapshot.forEach((item) => {
-            
-              
-          userBlanklist.push({...item.val(), userKey: item.key})
-          
-           
-         })
-          setUserlist(userBlanklist);
-           setLoading(false);
+    setLoading(true);
+    const fetchdata = () => {
+      const UseRef = ref(db, "users/");
+      onValue(UseRef, (snapshot) => {
+        let userBlanklist = [];
+
+        snapshot.forEach((item) => {
+          userBlanklist.push({ ...item.val(), userKey: item.key });
         });
-      }
-      fetchdata()
-    }, [])
-    // console.log(userlist);
-    
+        setUserlist(userBlanklist);
+        setLoading(false);
+      });
+    };
+    fetchdata();
+  }, []);
+  // console.log(userlist);
+
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
-
-
   if (loading) {
-    return <LoadingSkeliton/>
+    return <LoadingSkeliton />;
   }
   return (
     <>
@@ -77,7 +71,7 @@ const GroupElimetn = ({
                       src={Profilegroup}
                       alt={Profilegroup}
                       className={CardEliment}
-                     />
+                    />
                   </picture>
                   <div>
                     <h3 className={HeaderName}>Friends Reunion</h3>
@@ -95,4 +89,4 @@ const GroupElimetn = ({
   );
 };
 
-export default GroupElimetn
+export default GroupList;

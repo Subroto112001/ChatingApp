@@ -68,6 +68,12 @@ function LogInPage() {
     }
   };
 
+
+  /**
+   * todo : Google Login
+   * it will push information in our database and also create a account
+   */
+
   const HandleGoogleLOgin = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)

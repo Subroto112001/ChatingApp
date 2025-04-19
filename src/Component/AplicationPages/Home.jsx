@@ -6,6 +6,13 @@ import ProfileCar from "../../assets/CarProfile.jpg";
 import { IoIosSearch } from 'react-icons/io';
 import GroupElimetn from '../Eliment/HomePageEliment/GroupElimetn';
 import InputboxForpages from '../Comon/InputboxForpages';
+import GroupList from '../Eliment/HomePageEliment/GroupList';
+import FriendRequest from '../Eliment/HomePageEliment/FriendRequest';
+import Friends from '../Eliment/HomePageEliment/Friends';
+import FriendGroup from '../Eliment/HomePageEliment/FriendGroup';
+import UserList from '../Eliment/HomePageEliment/UserList';
+import BlockUser from '../Eliment/HomePageEliment/BlockUser';
+
 const GroupContet = () => {
   
   return (
@@ -17,7 +24,7 @@ const GroupContet = () => {
           />
 
           {/* firends group zonde */}
-          <GroupElimetn
+          <GroupList
             CardEliment={"w-[60px] h-[60px] rounded-full"}
             HeaderName={"text-[18px] font-bold text-black"}
             BtnStyle={
@@ -25,10 +32,11 @@ const GroupContet = () => {
             }
             BoxStyle={"h-[40dvh] overflow-x-scroll"}
             VariantNumber={10}
-            HeaderText={"Group"}
+            HeaderText={"Group List"}
             ButtonText={"Join"}
           />
-          <GroupElimetn
+          {/* firends Request zonde */}
+          <FriendRequest
             nextelimetnclass={" "}
             CardEliment={"w-[50px] h-[50px] rounded-full"}
             HeaderName={"text-[14px] font-bold text-black"}
@@ -45,8 +53,8 @@ const GroupContet = () => {
           {/* <div className="Group  mt-[43px]"> */}
         </div>
         <div className="w-[27%]  flex flex-col ">
-          {/* firends group zonde */}
-          <GroupElimetn
+          {/* firends zonde */}
+          <Friends
             CardEliment={"w-[50px] h-[50px] rounded-full"}
             HeaderName={"text-[14px] font-semibold text-black"}
             Subheader={"text-[12px] font-medium text-sms"}
@@ -59,7 +67,10 @@ const GroupContet = () => {
             PeraText={"Today, 8:56pm"}
             peraStyle={"text-[10px] text-gray font-medium"}
           />
-          <GroupElimetn
+
+          {/* firends zonde */}
+          {/* friend Group zone */}
+          <FriendGroup
             nextelimetnclass={" "}
             CardEliment={"w-[55px] h-[55px] rounded-full"}
             HeaderName={"text-[14px] font-bold text-black"}
@@ -74,12 +85,12 @@ const GroupContet = () => {
             VariantNumber={8}
           />
 
-          {/* friend Request zone */}
+          {/* friend Group zone */}
         </div>
         {/* <div className="Group  mt-[43px]"> */}
         <div className="w-[27%]  flex flex-col ">
-          {/* firends group zonde */}
-          <GroupElimetn
+          {/* Userlist zonde */}
+          <UserList
             CardEliment={"w-[50px] h-[50px] rounded-full"}
             HeaderName={"text-[16px] font-bold text-black"}
             BtnStyle={
@@ -90,7 +101,10 @@ const GroupContet = () => {
             VariantNumber={9}
             ButtonText={"+"}
           />
-          <GroupElimetn
+
+          {/* Userlist zonde */}
+          {/* BlockUser zonde */}
+          <BlockUser
             nextelimetnclass={" "}
             CardEliment={"w-[50px] h-[50px] rounded-full"}
             HeaderName={"text-[14px] font-bold text-black"}
