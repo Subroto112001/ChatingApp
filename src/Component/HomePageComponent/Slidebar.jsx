@@ -14,8 +14,7 @@ const Slidebar = () => {
   const pagenavigate = useNavigate();
   const location = useLocation();
   const auth = getAuth();
-const [userData, setUserData]  = useState({})
-
+  const [userData, setUserData] = useState({});
 
   const elimentofSlidebar = [
     {
@@ -83,7 +82,7 @@ const [userData, setUserData]  = useState({})
           throw new Error("Failed to upload image ");
         }
 
-        // console.log(result.info.sucess_url);
+        console.log(result.info.secure_url);
       }
     );
   };
@@ -110,36 +109,35 @@ const [userData, setUserData]  = useState({})
       });
   };
 
-/**
- * todo : fetching data 
- * here we will use useEffect
- * it will upload images when we will log in by mail
- * this fuction will collect image and set it in our profile image side
- */
-  
+  /**
+   * todo : fetching data
+   * database : Firebase
+   * datatype : user data
+   * here we will use useEffect
+   * it will upload images when we will log in by mail
+   * this fuction will collect image and set it in our profile image side
+   */
+
   useEffect(() => {
     const fetchdata = () => {
       const UseRef = ref(db, "users/");
       onValue(UseRef, (snapshot) => {
-        let userBlankinfo = null
-     
+        let userBlankinfo = null;
+
         snapshot.forEach((item) => {
           if (item.val().userUid === auth.currentUser.uid) {
-            
             userBlankinfo = { ...item.val(), userKey: item.key };
           }
-        
-         
-       })
-       setUserData(userBlankinfo);
+        });
+        setUserData(userBlankinfo);
       });
-    }
-    fetchdata()
-  }, [])
+    };
+    fetchdata();
+  }, []);
+
+
   
-  
-  console.log(userData);
-  
+
   return (
     <>
       <div className="Slidebar w-[10%] h-[96dvh] bg-blue rounded-md flex flex-col items-center ">
@@ -159,7 +157,7 @@ const [userData, setUserData]  = useState({})
           </span>
         </div>
         <h1 className="text-[22px] font-medium text-white">
-          {userData? userData.username: "Your Name"}
+          {userData ? userData.username : "Your Name"}
         </h1>
 
         <div className="flex flex-col justify-center items-center  mt-10 gap-y-10">

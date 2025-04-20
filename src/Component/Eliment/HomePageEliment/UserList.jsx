@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
+import { getAuth } from "firebase/auth";
 const UserList = ({
   BtnStyle,
   CardEliment,
@@ -18,6 +19,15 @@ const UserList = ({
   const [userlist, setUserlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
+  const auth = getAuth();
+/**
+ * todo : fetching data from database
+ * Database : firebase
+ * datatype : User Information
+ * code date : 20/04/2025
+ * author : Subroto Kumar Barman
+ */
+
 
   useEffect(() => {
     setLoading(true);
@@ -27,17 +37,25 @@ const UserList = ({
         let userBlanklist = [];
 
         snapshot.forEach((item) => {
-          userBlanklist.push({ ...item.val(), userKey: item.key });
+          if (item.val().userUid !== auth.currentUser.uid)
+            userBlanklist.push({ ...item.val(), userKey: item.key });
         });
         setUserlist(userBlanklist);
         setLoading(false);
       });
     };
     fetchdata();
+    // cleanup funtion
+    return () => {
+       const UseRef = ref(db, "users/");
+      off(UseRef);
+    }
   }, []);
-  // console.log(userlist);
+  
+;
+   
 
-  const [Totalnumber, setTotalnumber] = useState(VariantNumber);
+  const [Totalnumber, setTotalnumber] = useState(userlist.length);
 
   if (loading) {
     return <LoadingSkeliton />;
@@ -50,31 +68,31 @@ const UserList = ({
             <h2 className="text-[20px] flex flex-row justify-center items-center font-semibold text-black">
               {HeaderText} &nbsp;
               <span className="bg-red-400 text-[18px] w-6 h-6 rounded-full flex justify-center items-center">
-                {Totalnumber}
+                {userlist.length}
               </span>
             </h2>
             <BsThreeDotsVertical className=" text-blue" />
           </div>
           <div className={BoxStyle}>
-            {[...new Array(Totalnumber)].map((_, index) => (
+            {userlist.map((item, index) => (
               <div
                 className={
                   Totalnumber - 1 == index
                     ? "flex justify-between items-center pt-4 pb-5 "
                     : "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
-                key={index}
+                key={item.userUid}
               >
                 <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
-                      src={Profilegroup}
-                      alt={Profilegroup}
+                      src={item.profile_picture}
+                      alt={item.profile_picture}
                       className={CardEliment}
                     />
                   </picture>
                   <div>
-                    <h3 className={HeaderName}>Friends Reunion</h3>
+                    <h3 className={HeaderName}>{item.username}</h3>
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
