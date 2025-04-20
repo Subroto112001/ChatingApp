@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, off, onValue, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, push, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 const UserList = ({
@@ -20,6 +20,7 @@ const UserList = ({
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
   const auth = getAuth();
+  const [user, setUser] = useState()
   /**
    * todo : fetching data from database
    * Database : firebase
@@ -36,8 +37,13 @@ const UserList = ({
         let userBlanklist = [];
 
         snapshot.forEach((item) => {
-          if (item.val().userUid !== auth.currentUser.uid)
-            userBlanklist.push({ ...item.val(), userKey: item.key });
+          if (item.val().userUid !== auth.currentUser.uid) {
+             userBlanklist.push({ ...item.val(), userKey: item.key });
+          } else {
+            let user = Object.assign({ ...item.val(), userKey: item.key })
+        setUser(user)
+          }
+         
         });
         setUserlist(userBlanklist);
         setLoading(false);
@@ -51,13 +57,20 @@ const UserList = ({
     };
   }, []);
 
-  /** 
-  *todo :  friend request database
-  * @param({item})
-  * return void
-  */
-  const HandleFriendRequest = () => {
-  
+ console.log(user);
+ 
+
+  /**
+   *todo :  friend request database
+   * @param({item})
+   * return void
+   */
+  const HandleFriendRequest = (item) => {
+    console.log(item);
+    set(push(ref(db, "friendRequest/")), {
+      SenderUid: auth.currentUser.uid,
+      ReciverUid: auth.currentUser.uid,
+    });
   };
 
   const [Totalnumber, setTotalnumber] = useState(userlist.length);
@@ -103,7 +116,7 @@ const UserList = ({
                 </div>
                 <button
                   className={BtnStyle}
-                  onClick={() => HandleFriendRequest()}
+                  onClick={() => HandleFriendRequest(item)}
                 >
                   {ButtonText}
                 </button>
