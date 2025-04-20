@@ -6,7 +6,7 @@ import { FiMessageSquare } from "react-icons/fi";
 import { FaGear } from "react-icons/fa6";
 import { ImExit } from "react-icons/im";
 import { useState } from "react";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 import { useLocation, useNavigate } from "react-router";
 import { getAuth, signOut } from "firebase/auth";
 const Slidebar = () => {
@@ -81,8 +81,12 @@ const Slidebar = () => {
         if (err) {
           throw new Error("Failed to upload image ");
         }
-
         console.log(result.info.secure_url);
+      
+
+  update(ref(db, `users/${userData.userKey}`), {
+    profile_picture: result?.info?.secure_url
+  });
       }
     );
   };

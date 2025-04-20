@@ -20,14 +20,13 @@ const UserList = ({
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
   const auth = getAuth();
-/**
- * todo : fetching data from database
- * Database : firebase
- * datatype : User Information
- * code date : 20/04/2025
- * author : Subroto Kumar Barman
- */
-
+  /**
+   * todo : fetching data from database
+   * Database : firebase
+   * datatype : User Information
+   * code date : 20/04/2025
+   * author : Subroto Kumar Barman
+   */
 
   useEffect(() => {
     setLoading(true);
@@ -47,13 +46,19 @@ const UserList = ({
     fetchdata();
     // cleanup funtion
     return () => {
-       const UseRef = ref(db, "users/");
+      const UseRef = ref(db, "users/");
       off(UseRef);
-    }
+    };
   }, []);
+
+  /** 
+  *todo :  friend request database
+  * @param({item})
+  * return void
+  */
+  const HandleFriendRequest = () => {
   
-;
-   
+  };
 
   const [Totalnumber, setTotalnumber] = useState(userlist.length);
 
@@ -96,7 +101,12 @@ const UserList = ({
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                <button className={BtnStyle}>{ButtonText}</button>
+                <button
+                  className={BtnStyle}
+                  onClick={() => HandleFriendRequest()}
+                >
+                  {ButtonText}
+                </button>
                 <p className={peraStyle}>{PeraText}</p>
               </div>
             ))}
