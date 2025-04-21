@@ -20,7 +20,7 @@ const UserList = ({
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
   const auth = getAuth();
-  const [user, setUser] = useState()
+  const [loggeduser, setLoggeduser] = useState();
   /**
    * todo : fetching data from database
    * Database : firebase
@@ -41,7 +41,7 @@ const UserList = ({
              userBlanklist.push({ ...item.val(), userKey: item.key });
           } else {
             let user = Object.assign({ ...item.val(), userKey: item.key })
-        setUser(user)
+        setLoggeduser(user);
           }
          
         });
@@ -57,7 +57,7 @@ const UserList = ({
     };
   }, []);
 
- console.log(user);
+ console.log(userlist);
  
 
   /**
@@ -68,8 +68,17 @@ const UserList = ({
   const HandleFriendRequest = (item) => {
     console.log(item);
     set(push(ref(db, "friendRequest/")), {
-      SenderUid: auth.currentUser.uid,
-      ReciverUid: auth.currentUser.uid,
+      SenderEmail: loggeduser.email,
+      SenderProfilePicture: loggeduser.profile_picture,
+      SenderUserKey: loggeduser.userKey,
+      SenderUid: loggeduser.userUid,
+      SenderUserName: loggeduser.username,
+
+      ReciverEmail: item.email,
+      ReciverProfilePicture: item.profile_picture,
+      ReciverUserKey: item.userKey,
+      ReciverUid: item.userUid,
+      ReciverUserName: item.username,
     });
   };
 
