@@ -15,27 +15,27 @@ const FriendRequest = ({
   PeraText,
   peraStyle,
 }) => {
-  const [userlist, setUserlist] = useState([]);
+  const [requestlist, setRequestlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
 
   useEffect(() => {
     setLoading(true);
     const fetchdata = () => {
-      const UseRef = ref(db, "users/");
+      const UseRef = ref(db, "friendRequest/");
       onValue(UseRef, (snapshot) => {
-        let userBlanklist = [];
+        let requestBlanklist = [];
 
         snapshot.forEach((item) => {
-          userBlanklist.push({ ...item.val(), userKey: item.key });
+          requestBlanklist.push({ ...item.val(), userKey: item.key });
         });
-        setUserlist(userBlanklist);
+        setRequestlist(requestBlanklist);
         setLoading(false);
       });
     };
     fetchdata();
   }, []);
-  // console.log(userlist);
+  console.log(requestlist, "request page");
 
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 

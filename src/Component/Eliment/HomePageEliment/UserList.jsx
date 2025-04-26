@@ -4,6 +4,7 @@ import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, off, onValue, push, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
+import moment from "moment";
 const UserList = ({
   BtnStyle,
   CardEliment,
@@ -79,6 +80,23 @@ const UserList = ({
       ReciverUserKey: item.userKey,
       ReciverUid: item.userUid,
       ReciverUserName: item.username,
+      createaDAte: moment().format("MM DD YYYY, h:mm:ss a"),
+    }).then(() => {
+      set(push(ref(db, "notification/")), {
+        Notificationmsg: `Friend Request Sent`,
+        SenderEmail: loggeduser.email,
+        SenderProfilePicture: loggeduser.profile_picture,
+        SenderUserKey: loggeduser.userKey,
+        SenderUid: loggeduser.userUid,
+        SenderUserName: loggeduser.username,
+
+        ReciverEmail: item.email,
+        ReciverProfilePicture: item.profile_picture,
+        ReciverUserKey: item.userKey,
+        ReciverUid: item.userUid,
+        ReciverUserName: item.username,
+        createaDAte: moment().format("MM DD YYYY, h:mm:ss a"),
+      });
     });
   };
 
