@@ -5,6 +5,7 @@ import { getDatabase, off, onValue, push, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment";
+import { FaMinus } from "react-icons/fa";
 const UserList = ({
   BtnStyle,
   CardEliment,
@@ -98,7 +99,9 @@ const UserList = ({
         createaDAte: moment().format("MM DD YYYY, h:mm:ss a"),
       });
     });
+    console.log(auth.currentUser.uid.concat(item.userUid));
   };
+
 
   const [Totalnumber, setTotalnumber] = useState(userlist.length);
 
@@ -141,12 +144,22 @@ const UserList = ({
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                <button
-                  className={BtnStyle}
-                  onClick={() => HandleFriendRequest(item)}
-                >
-                  {ButtonText}
-                </button>
+                {auth.currentUser.uid.concat(item.userUid) ===
+                loggeduser.userUid.concat(item.userUid) ? (
+                  <button
+                    className={BtnStyle}
+                    onClick={() => HandleFriendRequest(item)}
+                  >
+                    <FaMinus />
+                  </button>
+                ) : (
+                  <button
+                    className={BtnStyle}
+                    onClick={() => HandleFriendRequest(item)}
+                  >
+                    {ButtonText}
+                  </button>
+                )}
                 <p className={peraStyle}>{PeraText}</p>
               </div>
             ))}
