@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, off, onValue, push, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment";
@@ -23,6 +23,8 @@ const UserList = ({
   const db = getDatabase();
   const auth = getAuth();
   const [loggeduser, setLoggeduser] = useState();
+  const [friendRequestlist, setfriendRequestlist] = useState([]);
+  const [Requestsent, setRequestsent] = useState([]);
   /**
    * todo : fetching data from database
    * Database : firebase
@@ -40,12 +42,11 @@ const UserList = ({
 
         snapshot.forEach((item) => {
           if (item.val().userUid !== auth.currentUser.uid) {
-             userBlanklist.push({ ...item.val(), userKey: item.key });
+            userBlanklist.push({ ...item.val(), userKey: item.key });
           } else {
-            let user = Object.assign({ ...item.val(), userKey: item.key })
-        setLoggeduser(user);
+            let user = Object.assign({ ...item.val(), userKey: item.key });
+            setLoggeduser(user);
           }
-         
         });
         setUserlist(userBlanklist);
         setLoading(false);
@@ -59,16 +60,13 @@ const UserList = ({
     };
   }, []);
 
- console.log(userlist);
- 
-
   /**
    *todo :  friend request database
    * @param({item})
    * return void
    */
   const HandleFriendRequest = (item) => {
-    console.log(item);
+    // console.log(item);
     set(push(ref(db, "friendRequest/")), {
       SenderEmail: loggeduser.email,
       SenderProfilePicture: loggeduser.profile_picture,
@@ -99,9 +97,67 @@ const UserList = ({
         createaDAte: moment().format("MM DD YYYY, h:mm:ss a"),
       });
     });
-    console.log(auth.currentUser.uid.concat(item.userUid));
   };
 
+  /**
+   * todo : fetch friend Request data from database
+   *
+   * */
+
+  useEffect(() => {
+    if (!loggeduser) return;
+
+    const fetcfriendRequesthdata = () => {
+      const UseRef = ref(db, "friendRequest/");
+      onValue(UseRef, (snapshot) => {
+        let userfriendRequestBlanklist = [];
+
+        snapshot.forEach((item) => {
+          if (
+            auth.currentUser.uid ||
+            loggeduser.userUid === item.val().SenderUid
+          ) {
+            userfriendRequestBlanklist.push(
+              loggeduser.userUid + item.val().ReciverUid
+            );
+          }
+        });
+
+        setfriendRequestlist(userfriendRequestBlanklist);
+      });
+    };
+
+    fetcfriendRequesthdata();
+
+    // cleanup funtion
+    return () => {
+      const UseRef = ref(db, "friendRequest/");
+      off(UseRef);
+    };
+  }, [loggeduser]);
+
+  console.log(Requestsent);
+
+  /**
+   * todo : Friend Request remove
+   * friend request remove from oour database
+   * author : Subroto Kumar Barman
+   * date l: 28/04/2025
+   * */
+
+  const HandleFriendRequestremove = (item) => {
+  
+console.log(item.userKey);
+
+   const dataToRemoveRef = ref(db, `friendRequest/${item.userKey}`);
+   remove(dataToRemoveRef)
+     .then(() => {
+       console.log("Friend request deleted successfully!");
+     })
+     .catch((error) => {
+       console.error("Error deleting friend request:", error);
+     });
+  }
 
   const [Totalnumber, setTotalnumber] = useState(userlist.length);
 
@@ -144,11 +200,12 @@ const UserList = ({
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                {auth.currentUser.uid.concat(item.userUid) ===
-                loggeduser.userUid.concat(item.userUid) ? (
+                {friendRequestlist.includes(
+                  auth.currentUser.uid.concat(item.userUid)
+                ) ? (
                   <button
                     className={BtnStyle}
-                    onClick={() => HandleFriendRequest(item)}
+                    onClick={() => HandleFriendRequestremove(item)}
                   >
                     <FaMinus />
                   </button>

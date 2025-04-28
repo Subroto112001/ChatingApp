@@ -3,6 +3,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
+import { getAuth } from "firebase/auth";
+import moment from "moment/moment";
 const FriendRequest = ({
   BtnStyle,
   CardEliment,
@@ -18,6 +20,8 @@ const FriendRequest = ({
   const [requestlist, setRequestlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
+  
+    const auth = getAuth();
 
   useEffect(() => {
     setLoading(true);
@@ -27,7 +31,8 @@ const FriendRequest = ({
         let requestBlanklist = [];
 
         snapshot.forEach((item) => {
-          requestBlanklist.push({ ...item.val(), userKey: item.key });
+          if (auth.currentUser.uid !== item.val().SenderUid)
+            requestBlanklist.push({ ...item.val(), userKey: item.key });
         });
         setRequestlist(requestBlanklist);
         setLoading(false);
@@ -35,7 +40,9 @@ const FriendRequest = ({
     };
     fetchdata();
   }, []);
-  console.log(requestlist, "request page");
+
+
+console.log(requestlist);
 
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
@@ -56,7 +63,7 @@ const FriendRequest = ({
             <BsThreeDotsVertical className=" text-blue" />
           </div>
           <div className={BoxStyle}>
-            {[...new Array(Totalnumber)].map((_, index) => (
+            {requestlist.map((item, index) => (
               <div
                 className={
                   Totalnumber - 1 == index
@@ -68,17 +75,22 @@ const FriendRequest = ({
                 <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
-                      src={Profilegroup}
-                      alt={Profilegroup}
+                      src={item.SenderProfilePicture}
+                      alt={item.SenderProfilePicture}
                       className={CardEliment}
                     />
                   </picture>
                   <div>
-                    <h3 className={HeaderName}>Friends Reunion</h3>
-                    <p className={Subheader}>Hi Guys, Wassup!</p>
+                    <h3 className={HeaderName}>{item.SenderUserName}</h3>
+                    <p className={Subheader}>
+                      {moment(item.createaDAte).toNow()}
+                    </p>
                   </div>
                 </div>
-                <button className={BtnStyle}>{ButtonText}</button>
+                <div className="flex flex-col gap-1">
+                  <button className={BtnStyle}>Add</button>
+                  <button className={BtnStyle}>Remove</button>
+                </div>
                 <p className={peraStyle}>{PeraText}</p>
               </div>
             ))}
