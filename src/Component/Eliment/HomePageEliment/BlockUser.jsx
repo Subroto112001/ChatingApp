@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 const BlockUser = ({
   BtnStyle,
@@ -15,29 +15,54 @@ const BlockUser = ({
   PeraText,
   peraStyle,
 }) => {
-  const [userlist, setUserlist] = useState([]);
+  const [blockuserlist, setblockuserlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
 
   useEffect(() => {
     setLoading(true);
-    const fetchdata = () => {
-      const UseRef = ref(db, "users/");
+    const fetchdatablockuser = () => {
+      const UseRef = ref(db, "blockuser/");
       onValue(UseRef, (snapshot) => {
-        let userBlanklist = [];
+        let blockBlanklist = [];
 
         snapshot.forEach((item) => {
-          userBlanklist.push({ ...item.val(), userKey: item.key });
+          blockBlanklist.push({ ...item.val(), blockKey: item.key });
         });
-        setUserlist(userBlanklist);
+        setblockuserlist(blockBlanklist);
         setLoading(false);
       });
     };
-    fetchdata();
-  }, []);
-  // console.log(userlist);
+    fetchdatablockuser();
 
-  const [Totalnumber, setTotalnumber] = useState(VariantNumber);
+
+    return () => {
+             const UseRef = ref(db, "friend/");
+             off(UseRef);
+           };
+  }, []);
+
+
+console.log(blockuserlist);
+
+
+/**
+ * todo : unblock blocked user
+ * what we will do : here frist send all data friend database
+ * 2nd we will remove all data from block database
+ * date : 28/04/2025
+ * */
+  
+  const handleunblock = (item) => {
+    set(push(ref(db, "friend/")), {
+      ...item,
+    }).then(() => {
+      console.log(item.FrKey);
+
+      const dbref = ref(db, `blockuser/${item.blockKey}`);
+      remove(dbref);
+    });
+  };
 
   if (loading) {
     return <LoadingSkeliton />;
@@ -50,36 +75,39 @@ const BlockUser = ({
             <h2 className="text-[20px] flex flex-row justify-center items-center font-semibold text-black">
               {HeaderText} &nbsp;
               <span className="bg-red-400 text-[18px] w-6 h-6 rounded-full flex justify-center items-center">
-                {Totalnumber}
+                {blockuserlist.length}
               </span>
             </h2>
             <BsThreeDotsVertical className=" text-blue" />
           </div>
           <div className={BoxStyle}>
-            {[...new Array(Totalnumber)].map((_, index) => (
+            {blockuserlist.map((item, index) => (
               <div
                 className={
-                  Totalnumber - 1 == index
-                    ? "flex justify-between items-center pt-4 pb-5 "
-                    : "flex justify-between items-center pt-4 pb-5 bordercolor"
+                  
+              
+                  "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
                 key={index}
               >
                 <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
-                      src={Profilegroup}
+                      src={item.SenderProfilePicture}
                       alt={Profilegroup}
                       className={CardEliment}
                     />
                   </picture>
                   <div>
-                    <h3 className={HeaderName}>Friends Reunion</h3>
-                    <p className={Subheader}>Hi Guys, Wassup!</p>
+                    <h3 className={HeaderName}>{item.SenderUserName}</h3>
                   </div>
                 </div>
-                <button className={BtnStyle}>{ButtonText}</button>
-                <p className={peraStyle}>{PeraText}</p>
+                <button
+                  className={BtnStyle}
+                  onClick={() => handleunblock(item)}
+                >
+                  {ButtonText}
+                </button>
               </div>
             ))}
           </div>

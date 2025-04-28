@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment/moment";
@@ -20,8 +20,8 @@ const FriendRequest = ({
   const [requestlist, setRequestlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
-  
-    const auth = getAuth();
+
+  const auth = getAuth();
 
   useEffect(() => {
     setLoading(true);
@@ -31,18 +31,57 @@ const FriendRequest = ({
         let requestBlanklist = [];
 
         snapshot.forEach((item) => {
-          if (auth.currentUser.uid !== item.val().SenderUid)
-            requestBlanklist.push({ ...item.val(), userKey: item.key });
+          if (auth.currentUser.uid === item.val().ReciverUid)
+            requestBlanklist.push({ ...item.val(), FrKey: item.key });
         });
         setRequestlist(requestBlanklist);
         setLoading(false);
       });
     };
     fetchdata();
+    // cleanup funtion
+    return () => {
+      const UseRef = ref(db, "friendRequest/");
+      off(UseRef);
+    };
   }, []);
 
+  console.log(requestlist);
+  /**
+   * todo : accept friend request
+   * What we will work: we push our all data in friend database and also remove data from friend request databse
+   * author : Subroto Kumar Barman
+   * date : 28/04/2025
+   * */
 
-console.log(requestlist);
+  const acceptfriendRequest = (item) => {
+console.log(item);
+    set(push(ref(db, "friend/")), {
+      ...item, 
+    }).then(() => {
+      console.log(item.FrKey);
+      
+       const dbref = ref(db, `friendRequest/${item.FrKey}`);
+       remove(dbref);
+    });
+  };
+
+  /**
+   * todo : remove friend request
+   * What we will work:  remove friend request from our database
+   * author : Subroto Kumar Barman
+   * date : 28/04/2025
+   * */
+  const removeFriendrequest = (Frkey) => {
+    const dbref = ref(db, `friendRequest/${Frkey}`);
+    remove(dbref)
+      .then(() => {
+        console.log("Friend request deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting friend request:", error);
+      });
+  };
 
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
@@ -88,8 +127,20 @@ console.log(requestlist);
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <button className={BtnStyle}>Add</button>
-                  <button className={BtnStyle}>Remove</button>
+                  <button
+                    className={BtnStyle}
+                    onClick={() => {
+                      acceptfriendRequest(item);
+                    }}
+                  >
+                    Add
+                  </button>
+                  <button
+                    className={BtnStyle}
+                    onClick={() => removeFriendrequest(item.FrKey)}
+                  >
+                    Remove
+                  </button>
                 </div>
                 <p className={peraStyle}>{PeraText}</p>
               </div>

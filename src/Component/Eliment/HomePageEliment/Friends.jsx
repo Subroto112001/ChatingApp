@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
+import { getAuth } from "firebase/auth";
 const Friends = ({
   BtnStyle,
   CardEliment,
@@ -15,30 +16,64 @@ const Friends = ({
   PeraText,
   peraStyle,
 }) => {
-  const [userlist, setUserlist] = useState([]);
+  const [friendlist, setfriendlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
+  const auth = getAuth();
+
+/**
+ * todo : fetch data from friend database
+ * what we do : we will fetch data from database
+ * date : 28/ 04/2025
+ * */ 
 
   useEffect(() => {
     setLoading(true);
-    const fetchdata = () => {
-      const UseRef = ref(db, "users/");
+    const fetchfriendData = () => {
+      const UseRef = ref(db, "friend/");
       onValue(UseRef, (snapshot) => {
-        let userBlanklist = [];
+        let friendBlanklist = [];
 
         snapshot.forEach((item) => {
-          userBlanklist.push({ ...item.val(), userKey: item.key });
+         if (auth.currentUser.uid === item.val().ReciverUid)
+           friendBlanklist.push({ ...item.val(), FriendKey: item.key });
+         
         });
-        setUserlist(userBlanklist);
+        setfriendlist(friendBlanklist);
         setLoading(false);
       });
     };
-    fetchdata();
+    fetchfriendData();
+
+
+    return () => {
+          const UseRef = ref(db, "friend/");
+          off(UseRef);
+        };
   }, []);
-  // console.log(userlist);
+  console.log(friendlist);
 
-  const [Totalnumber, setTotalnumber] = useState(VariantNumber);
+ 
+/**
+ * todo : block user
+ * what we will do : 
+ * 1st we create a databsae name block and we push all data from friend database
+ * 2nd we will delete all data from friend database
+ * date : 28/04/2025
+ * */ 
 
+  const blockfriend = (item) =>{
+   set(push(ref(db, "blockuser/")), {
+        ...item, 
+      }).then(() => {
+        console.log(item.FrKey);
+        
+         const dbref = ref(db, `friend/${item.FriendKey}`);
+         remove(dbref);
+      });
+}  
+  
+  
   if (loading) {
     return <LoadingSkeliton />;
   }
@@ -50,36 +85,36 @@ const Friends = ({
             <h2 className="text-[20px] flex flex-row justify-center items-center font-semibold text-black">
               {HeaderText} &nbsp;
               <span className="bg-red-400 text-[18px] w-6 h-6 rounded-full flex justify-center items-center">
-                {Totalnumber}
+                {friendlist.length}
               </span>
             </h2>
             <BsThreeDotsVertical className=" text-blue" />
           </div>
           <div className={BoxStyle}>
-            {[...new Array(Totalnumber)].map((_, index) => (
+            {friendlist.map((item, index) => (
               <div
-                className={
-                  Totalnumber - 1 == index
-                    ? "flex justify-between items-center pt-4 pb-5 "
-                    : "flex justify-between items-center pt-4 pb-5 bordercolor"
-                }
+                className={"flex justify-between items-center pt-4 pb-5 "}
                 key={index}
               >
                 <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
-                      src={Profilegroup}
-                      alt={Profilegroup}
+                      src={item.SenderProfilePicture}
+                      alt={item.SenderProfilePicture}
                       className={CardEliment}
                     />
                   </picture>
                   <div>
-                    <h3 className={HeaderName}>Friends Reunion</h3>
+                    <h3 className={HeaderName}>{item.SenderUserName}</h3>
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                <button className={BtnStyle}>{ButtonText}</button>
-                <p className={peraStyle}>{PeraText}</p>
+                <button
+                  className={BtnStyle}
+                  onClick={() => blockfriend(item)}
+                >
+                  Block
+                </button>
               </div>
             ))}
           </div>

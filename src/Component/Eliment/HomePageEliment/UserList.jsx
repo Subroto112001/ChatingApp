@@ -113,6 +113,8 @@ const UserList = ({
         let userfriendRequestBlanklist = [];
 
         snapshot.forEach((item) => {
+          console.log(item.val());
+
           if (
             auth.currentUser.uid ||
             loggeduser.userUid === item.val().SenderUid
@@ -136,28 +138,29 @@ const UserList = ({
     };
   }, [loggeduser]);
 
-  console.log(Requestsent);
+  // console.log(friendRequestlist);
 
   /**
    * todo : Friend Request remove
-   * friend request remove from oour database
+   * What we will work:  remove friend request from our database
    * author : Subroto Kumar Barman
    * date l: 28/04/2025
    * */
 
   const HandleFriendRequestremove = (item) => {
-  
-console.log(item.userKey);
+    // it is not working
+    const db = getDatabase();
+    console.log(item.userKey);
 
-   const dataToRemoveRef = ref(db, `friendRequest/${item.userKey}`);
-   remove(dataToRemoveRef)
-     .then(() => {
-       console.log("Friend request deleted successfully!");
-     })
-     .catch((error) => {
-       console.error("Error deleting friend request:", error);
-     });
-  }
+    const dbref = ref(db, `friendRequest/${item.userKey}`);
+    remove(dbref)
+      .then(() => {
+        console.log("Friend request deleted successfully!");
+      })
+      .catch((error) => {
+        console.error("Error deleting friend request:", error);
+      });
+  };
 
   const [Totalnumber, setTotalnumber] = useState(userlist.length);
 
