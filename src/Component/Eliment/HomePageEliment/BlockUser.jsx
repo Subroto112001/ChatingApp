@@ -3,6 +3,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
+import { getAuth } from "firebase/auth";
 const BlockUser = ({
   BtnStyle,
   CardEliment,
@@ -18,6 +19,7 @@ const BlockUser = ({
   const [blockuserlist, setblockuserlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
+  const auth = getAuth()
 
   useEffect(() => {
     setLoading(true);
@@ -27,7 +29,8 @@ const BlockUser = ({
         let blockBlanklist = [];
 
         snapshot.forEach((item) => {
-          blockBlanklist.push({ ...item.val(), blockKey: item.key });
+          if (auth.currentUser.uid == item.val().ReciverUid)
+            blockBlanklist.push({ ...item.val(), blockKey: item.key });
         });
         setblockuserlist(blockBlanklist);
         setLoading(false);
@@ -56,7 +59,7 @@ console.log(blockuserlist);
   const handleunblock = (item) => {
     set(push(ref(db, "friend/")), {
       ...item,
-    }).then(() => {
+    }).then(() => { 
       console.log(item.FrKey);
 
       const dbref = ref(db, `blockuser/${item.blockKey}`);
