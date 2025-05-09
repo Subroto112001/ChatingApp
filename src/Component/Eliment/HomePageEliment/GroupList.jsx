@@ -5,7 +5,6 @@ import { getDatabase, onValue, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import Modal from "react-modal";
 
-
 const GroupList = ({
   BtnStyle,
   CardEliment,
@@ -21,34 +20,55 @@ const GroupList = ({
   const [userlist, setUserlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
-const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [groupInfo, setGroupInfo] = useState({
+    groupName: "",
+    groupTagName: "",
+    groupImage: "",
+  });
+
+
+const [error, setError] = useState({})
 
   // react modal custom style
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      width: "40%",
+      transform: "translate(-50%, -50%)",
+    },
+  };
 
   // react modal custom style
-/**
- * 
- * This Two function will work for modal opening and closing
- * 
- * */ 
+
+  // handleChange function
+  const handleChange = (event) => {
+    const { name, value, files } = event.target;
+    setGroupInfo({
+
+      ...groupInfo, 
+      [name]: name == "groupImage" ? files : value,
+    });
+   
+  };
+console.log(groupInfo);
+
+  /**
+   *
+   * This Two function will work for modal opening and closing
+   *
+   * */
   function openModal() {
     setIsOpen(true);
   }
 
-    function closeModal() {
-      setIsOpen(false);
-    }
-
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -63,12 +83,53 @@ const customStyles = {
         setUserlist(userBlanklist);
         setLoading(false);
       });
-
     };
     fetchdata();
   }, []);
   // console.log(userlist);
+  // validation function
+  
+  const validationgroup = (groupInfo = {}) => {
+let eror = {}
+    const { groupName, groupTagName, groupImage } = groupInfo;
+    if (!groupImage) {
+      eror.groupImageError = "Group Image Missing";
+    }
+    if (!groupTagName) {
+      eror.groupTagNameError = "Group Tag Name Missing";
+    }
+    if (!groupName) {
+      eror.groupNameError = "Group Name Missing";
+    }
+    return eror
+    
+  };
 
+  /**
+   * 
+   * todo : Create A group
+   * 
+   * */
+  
+  const handleCreateGroup = () => {
+   const eroor = validationgroup(groupInfo);
+    
+    if (eroor) {
+     
+      setError(eroor);
+    }
+  
+  }
+
+
+  // handle key
+
+  const handlekey = (e) => {
+    validationgroup(groupInfo);
+    const eroor = validationgroup(groupInfo);
+      setError(eroor);
+  }
+  console.log(error);
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
   if (loading) {
@@ -134,48 +195,103 @@ const customStyles = {
           <div>
             <button
               onClick={closeModal}
-              className="text-red-600 bg-blue p-2 rounded font-bold text-[12px] cursor-pointer"
+              className="text-red-600  bg-green-500 p-2 rounded font-bold text-[12px] cursor-pointer"
             >
               Close
             </button>
 
-            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class=" mt-6 flex flex-col justify-center  w-full p-6 bg-gray-800 border border-gray-200 rounded-lg shadow-sm">
               <div class="mb-6">
                 <label
                   for="success"
                   class="block mb-2 text-sm font-medium text-green-700 dark:text-green-500"
                 >
-                  Your name
+                  Group Name
                 </label>
                 <input
+                  onChange={handleChange}
+                  onKeyUp={handlekey}
                   type="text"
                   id="success"
+                  name="groupName"
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
-                  placeholder="Success input"
+                  placeholder="Enter Group Name"
                 />
-                <p className="mt-2 text-sm text-green-600 dark:text-green-500">
-                  <span className="font-medium">Well done!</span> Some success
-                  message.
+                <p class="mt-2 text-sm text-white">
+                  {error && error.groupNameError}
                 </p>
               </div>
-              <div className="mb-6">
+              <div className="mb-6 ">
                 <label
                   for="success"
                   className="block mb-2 text-sm font-medium text-green-700 dark:text-green-500"
                 >
-                  Your name
+                  Group Tag name
                 </label>
                 <input
                   type="text"
                   id="success"
+                  onKeyUp={handlekey}
+                  onChange={handleChange}
+                  name="groupTagName"
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
-                  placeholder="Success input"
+                  placeholder="Enter Group Tag Name"
                 />
-                <p className="mt-2 text-sm text-green-600 dark:text-green-500">
-                  <span className="font-medium">Well done!</span> Some success
-                  message.
+
+                <p class="mt-2 text-sm text-white">
+                  {error && error.groupTagNameError}
                 </p>
               </div>
+
+              <div class="flex items-center justify-center w-full">
+                <label
+                  for="dropzone-file"
+                  class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                >
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg
+                      class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 16"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                      />
+                    </svg>
+                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span class="font-semibold">Click to upload</span> or drag
+                      and drop
+                    </p>
+                    <p class="text-xs text-white ">
+                      SVG, PNG, JPG or GIF (MAX. 800x400px)
+                    </p>
+                    <p class="text-xs text-red-500 ">
+                      {error && error.groupImageError}
+                    </p>
+                  </div>
+                  <input
+                    id="dropzone-file"
+                    name="groupImage"
+                    type="file"
+                    class="hidden"
+                    onChange={handleChange}
+                    onKeyUp={handlekey}
+                  />
+                </label>
+              </div>
+
+              <button
+                className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer"
+                onClick={handleCreateGroup}
+              >
+                Create
+              </button>
             </div>
           </div>
         </Modal>
