@@ -48,14 +48,34 @@ const [error, setError] = useState({})
   // handleChange function
   const handleChange = (event) => {
     const { name, value, files } = event.target;
-    setGroupInfo({
 
-      ...groupInfo, 
-      [name]: name == "groupImage" ? files : value,
+    const newValue = name == "groupImage" ? files : value;
+    setGroupInfo((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    /**
+     *
+     * todo : remove the error property
+     *
+     * */
+
+    setError((prevError) => {
+const updatedError = {...prevError}
+
+
+      if (newValue !== "") {
+      delete updatedError[`${name}Error`]
+      }
+      return updatedError
     });
-   
   };
-console.log(groupInfo);
+  console.log(groupInfo);
+  
+
+
+
 
   /**
    *
@@ -90,21 +110,22 @@ console.log(groupInfo);
   // validation function
   
   const validationgroup = (groupInfo = {}) => {
-let eror = {}
-    const { groupName, groupTagName, groupImage } = groupInfo;
-    if (!groupImage) {
-      eror.groupImageError = "Group Image Missing";
+    let eror = {}
+    
+    for (let field in groupInfo) {
+      if (groupInfo[field] == "") {
+        eror[`${field} Error`] = `${field} Missing`;
+      }
     }
-    if (!groupTagName) {
-      eror.groupTagNameError = "Group Tag Name Missing";
-    }
-    if (!groupName) {
-      eror.groupNameError = "Group Name Missing";
-    }
-    return eror
+
+
+    setError(eror);
+    return Object.keys(eror)?.length === 0 
     
   };
 
+  
+  
   /**
    * 
    * todo : Create A group
@@ -124,12 +145,12 @@ let eror = {}
 
   // handle key
 
-  const handlekey = (e) => {
-    validationgroup(groupInfo);
-    const eroor = validationgroup(groupInfo);
-      setError(eroor);
-  }
-  console.log(error);
+  // const handlekey = (e) => {
+  //   validationgroup(groupInfo);
+  //   const eroor = validationgroup(groupInfo);
+  //     setError(eroor);
+  // }
+
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
   if (loading) {
@@ -210,7 +231,7 @@ let eror = {}
                 </label>
                 <input
                   onChange={handleChange}
-                  onKeyUp={handlekey}
+                  // onKeyUp={handlekey}
                   type="text"
                   id="success"
                   name="groupName"
@@ -231,8 +252,8 @@ let eror = {}
                 <input
                   type="text"
                   id="success"
-                  onKeyUp={handlekey}
                   onChange={handleChange}
+                  // onKeyUp={handlekey}
                   name="groupTagName"
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
                   placeholder="Enter Group Tag Name"
@@ -279,9 +300,9 @@ let eror = {}
                     id="dropzone-file"
                     name="groupImage"
                     type="file"
+                    // onKeyUp={handlekey}
                     class="hidden"
                     onChange={handleChange}
-                    onKeyUp={handlekey}
                   />
                 </label>
               </div>

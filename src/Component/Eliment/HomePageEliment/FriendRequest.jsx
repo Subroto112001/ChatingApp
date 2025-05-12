@@ -59,11 +59,13 @@ console.log(item);
     set(push(ref(db, "friend/")), {
       ...item, 
     }).then(() => {
+      
       console.log(item.FrKey);
       
        const dbref = ref(db, `friendRequest/${item.FrKey}`);
-       remove(dbref);
-    });
+      remove(dbref);
+      
+    })
   };
 
   /**
@@ -76,6 +78,7 @@ console.log(item);
     const dbref = ref(db, `friendRequest/${Frkey}`);
     remove(dbref)
       .then(() => {
+     
         console.log("Friend request deleted successfully!");
       })
       .catch((error) => {
@@ -83,7 +86,7 @@ console.log(item);
       });
   };
 
-  const [Totalnumber, setTotalnumber] = useState(VariantNumber);
+
 
   if (loading) {
     return <LoadingSkeliton />;
@@ -96,7 +99,7 @@ console.log(item);
             <h2 className="text-[20px] flex flex-row justify-center items-center font-semibold text-black">
               {HeaderText} &nbsp;
               <span className="bg-red-400 text-[18px] w-6 h-6 rounded-full flex justify-center items-center">
-                {Totalnumber}
+                
               </span>
             </h2>
             <BsThreeDotsVertical className=" text-blue" />
@@ -105,9 +108,7 @@ console.log(item);
             {requestlist.map((item, index) => (
               <div
                 className={
-                  Totalnumber - 1 == index
-                    ? "flex justify-between items-center pt-4 pb-5 "
-                    : "flex justify-between items-center pt-4 pb-5 bordercolor"
+                  "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
                 key={index}
               >
