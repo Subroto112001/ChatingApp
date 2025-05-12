@@ -27,8 +27,7 @@ const GroupList = ({
     groupImage: "",
   });
 
-
-const [error, setError] = useState({})
+  const [error, setError] = useState({});
 
   // react modal custom style
   const customStyles = {
@@ -62,20 +61,16 @@ const [error, setError] = useState({})
      * */
 
     setError((prevError) => {
-const updatedError = {...prevError}
-
+      const updatedError = { ...prevError };
 
       if (newValue !== "") {
-      delete updatedError[`${name}Error`]
+        // delete updatedError[`${name}Error`];
+        updatedError[`${name}Error`] = "";
       }
-      return updatedError
+      return updatedError;
     });
   };
   console.log(groupInfo);
-  
-
-
-
 
   /**
    *
@@ -108,40 +103,61 @@ const updatedError = {...prevError}
   }, []);
   // console.log(userlist);
   // validation function
-  
+
   const validationgroup = (groupInfo = {}) => {
-    let eror = {}
-    
+    let eror = {};
+
     for (let field in groupInfo) {
       if (groupInfo[field] == "") {
-        eror[`${field} Error`] = `${field} Missing`;
+        eror[`${field}Error`] = `${field} Missing`;
       }
     }
 
-
     setError(eror);
-    return Object.keys(eror)?.length === 0 
-    
+    return Object.keys(eror)?.length === 0;
   };
 
-  
-  
   /**
-   * 
+   *
    * todo : Create A group
-   * 
+   *
    * */
-  
-  const handleCreateGroup = () => {
-   const eroor = validationgroup(groupInfo);
-    
-    if (eroor) {
-     
-      setError(eroor);
-    }
-  
-  }
 
+  const handleCreateGroup = async () => {
+    const eroor = validationgroup(groupInfo);
+
+    if (!eroor) return
+
+
+    /**
+     * 
+     * todo : update image to coludinary
+     * 
+     * */
+    
+    const formdata = new FormData()
+    formdata.append("file", groupInfo.groupImage[0]);
+    formdata.append("upload_preset", import.meta.env.VITE_UPLOAD_PRESET);
+  
+    const cloudinaryApi = import.meta.env.VITE_CLOUDINARY_API;
+    console.log(cloudinaryApi);
+    setLoading(true);
+    try {
+      const res = await fetch(cloudinaryApi, {
+        method: "POST",
+        body : formdata
+      })
+const data = await res.json()
+      console.log(data.secure_url);
+      
+    } catch (eroor) {
+      console.log( "eroor from casthc error cloudinary",eroor);
+      
+    } finally {
+      setLoading(false);
+    }
+
+  };
 
   // handle key
 
@@ -238,9 +254,12 @@ const updatedError = {...prevError}
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
                   placeholder="Enter Group Name"
                 />
-                <p class="mt-2 text-sm text-white">
-                  {error && error.groupNameError}
-                </p>
+
+                {error.groupNameError && (
+                  <span class="mt-2 text-sm text-red-500">
+                    {error.groupNameError}
+                  </span>
+                )}
               </div>
               <div className="mb-6 ">
                 <label
@@ -259,9 +278,11 @@ const updatedError = {...prevError}
                   placeholder="Enter Group Tag Name"
                 />
 
-                <p class="mt-2 text-sm text-white">
-                  {error && error.groupTagNameError}
-                </p>
+                {error.groupTagNameError && (
+                  <span class="mt-2 text-sm text-red-500">
+                    {error.groupTagNameError}
+                  </span>
+                )}
               </div>
 
               <div class="flex items-center justify-center w-full">
@@ -292,16 +313,18 @@ const updatedError = {...prevError}
                     <p class="text-xs text-white ">
                       SVG, PNG, JPG or GIF (MAX. 800x400px)
                     </p>
-                    <p class="text-xs text-red-500 ">
-                      {error && error.groupImageError}
-                    </p>
+                    {error.groupImageError && (
+                      <span class="mt-2 text-sm text-red-500">
+                        {error.groupImageError}
+                      </span>
+                    )}
                   </div>
                   <input
                     id="dropzone-file"
                     name="groupImage"
                     type="file"
                     // onKeyUp={handlekey}
-                    class="hidden"
+                    class="hidden" 
                     onChange={handleChange}
                   />
                 </label>
