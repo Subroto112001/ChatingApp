@@ -28,7 +28,7 @@ const GroupList = ({
   });
 
   const [error, setError] = useState({});
-
+const [newloading, setNewloading] = useState(false)
   // react modal custom style
   const customStyles = {
     content: {
@@ -141,7 +141,8 @@ const GroupList = ({
   
     const cloudinaryApi = import.meta.env.VITE_CLOUDINARY_API;
     console.log(cloudinaryApi);
-    setLoading(true);
+   
+    setNewloading(true);
     try {
       const res = await fetch(cloudinaryApi, {
         method: "POST",
@@ -154,7 +155,14 @@ const data = await res.json()
       console.log( "eroor from casthc error cloudinary",eroor);
       
     } finally {
-      setLoading(false);
+      setNewloading(false);
+      setGroupInfo({
+        groupName: "",
+        groupTagName: "",
+        groupImage: "",
+      });
+      setError({})
+      closeModal();
     }
 
   };
@@ -324,18 +332,26 @@ const data = await res.json()
                     name="groupImage"
                     type="file"
                     // onKeyUp={handlekey}
-                    class="hidden" 
+                    class="hidden"
                     onChange={handleChange}
                   />
                 </label>
               </div>
-
-              <button
-                className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer"
-                onClick={handleCreateGroup}
-              >
-                Create
-              </button>
+              {newloading ? (
+                <button
+                  className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer"
+                 
+                >
+                 Uploading...
+                </button>
+              ) : (
+                <button
+                  className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer"
+                  onClick={handleCreateGroup}
+                >
+                  Upload
+                </button>
+              )}
             </div>
           </div>
         </Modal>
