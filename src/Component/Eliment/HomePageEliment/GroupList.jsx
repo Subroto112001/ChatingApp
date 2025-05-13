@@ -4,6 +4,9 @@ import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import Modal from "react-modal";
+import { closeModal, openModal } from "../../../utiles/modals.utils";
+import { validationgroup } from "../../../Validation/grouplist.validation";
+import { handleChange } from "../../../utiles/HandleChange.utiles";
 
 const GroupList = ({
   BtnStyle,
@@ -44,46 +47,13 @@ const [newloading, setNewloading] = useState(false)
 
   // react modal custom style
 
-  // handleChange function
-  const handleChange = (event) => {
-    const { name, value, files } = event.target;
+  
 
-    const newValue = name == "groupImage" ? files : value;
-    setGroupInfo((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+ 
+  
 
-    /**
-     *
-     * todo : remove the error property
-     *
-     * */
 
-    setError((prevError) => {
-      const updatedError = { ...prevError };
-
-      if (newValue !== "") {
-        // delete updatedError[`${name}Error`];
-        updatedError[`${name}Error`] = "";
-      }
-      return updatedError;
-    });
-  };
-  console.log(groupInfo);
-
-  /**
-   *
-   * This Two function will work for modal opening and closing
-   *
-   * */
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  
 
   useEffect(() => {
     setLoading(true);
@@ -101,21 +71,23 @@ const [newloading, setNewloading] = useState(false)
     };
     fetchdata();
   }, []);
-  // console.log(userlist);
+ 
+
+
   // validation function
 
-  const validationgroup = (groupInfo = {}) => {
-    let eror = {};
+  // const validationgroup = (groupInfo = {}) => {
+  //   let eror = {};
 
-    for (let field in groupInfo) {
-      if (groupInfo[field] == "") {
-        eror[`${field}Error`] = `${field} Missing`;
-      }
-    }
+  //   for (let field in groupInfo) {
+  //     if (groupInfo[field] == "") {
+  //       eror[`${field}Error`] = `${field} Missing`;
+  //     }
+  //   }
 
-    setError(eror);
-    return Object.keys(eror)?.length === 0;
-  };
+  //   setError(eror);
+  //   return Object.keys(eror)?.length === 0;
+  // };
 
   /**
    *
@@ -124,7 +96,7 @@ const [newloading, setNewloading] = useState(false)
    * */
 
   const handleCreateGroup = async () => {
-    const eroor = validationgroup(groupInfo);
+    const eroor = validationgroup(groupInfo, setError);
 
     if (!eroor) return
 
@@ -162,7 +134,7 @@ const data = await res.json()
         groupImage: "",
       });
       setError({})
-      closeModal();
+      closeModal(setIsOpen);
     }
 
   };
@@ -193,7 +165,7 @@ const data = await res.json()
             </h2>
             <button
               className="p-2 bg-blue text-white font-bold text-[14px] cursor-pointer rounded "
-              onClick={openModal}
+              onClick={() => openModal(setIsOpen)}
             >
               Create Group
             </button>
@@ -239,7 +211,7 @@ const data = await res.json()
         >
           <div>
             <button
-              onClick={closeModal}
+              onClick={() => closeModal(setIsOpen)}
               className="text-red-600  bg-green-500 p-2 rounded font-bold text-[12px] cursor-pointer"
             >
               Close
@@ -254,7 +226,9 @@ const data = await res.json()
                   Group Name
                 </label>
                 <input
-                  onChange={handleChange}
+                  onChange={(event) =>
+                    handleChange(event, setGroupInfo, setError)
+                  }
                   // onKeyUp={handlekey}
                   type="text"
                   id="success"
@@ -279,7 +253,9 @@ const data = await res.json()
                 <input
                   type="text"
                   id="success"
-                  onChange={handleChange}
+                  onChange={(event) =>
+                    handleChange(event, setGroupInfo, setError)
+                  }
                   // onKeyUp={handlekey}
                   name="groupTagName"
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
@@ -333,16 +309,15 @@ const data = await res.json()
                     type="file"
                     // onKeyUp={handlekey}
                     class="hidden"
-                    onChange={handleChange}
+                    onChange={(event) =>
+                      handleChange(event, setGroupInfo, setError)
+                    }
                   />
                 </label>
               </div>
               {newloading ? (
-                <button
-                  className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer"
-                 
-                >
-                 Uploading...
+                <button className="p-2 mt-2 bg-green-500 text-white font-bold rounded cursor-pointer">
+                  Uploading...
                 </button>
               ) : (
                 <button
