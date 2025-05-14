@@ -10,6 +10,8 @@ import { handleChange } from "../../../utiles/HandleChange.utiles";
 import { cloudinaryUploadImage } from "../../../utiles/Cloudinary.utiles";
 import { firebaseUpload } from "../../../utiles/UploadFirebase.utiles";
 import { getAuth } from "firebase/auth";
+import { useFetchData } from "../../../Hooks/FetchData";
+import { useFetchDatafromFirebase } from "../../../Hooks/Firebasedatafetching";
 const GroupList = ({
   BtnStyle,
   CardEliment,
@@ -136,7 +138,7 @@ const [newloading, setNewloading] = useState(false)
   };
 
 console.log(inputRef.current);
-
+useFetchDatafromFirebase("Grouplist/");
 
 
   // handle key
