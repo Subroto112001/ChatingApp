@@ -46,7 +46,6 @@ const BlockUser = ({
   }, []);
 
 
-console.log(blockuserlist);
 
 
 /**

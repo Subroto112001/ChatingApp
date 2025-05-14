@@ -51,7 +51,6 @@ const Friends = ({
           off(UseRef);
         };
   }, []);
-  console.log(friendlist);
 
  
 /**
@@ -66,7 +65,7 @@ const Friends = ({
    set(push(ref(db, "blockuser/")), {
         ...item, 
       }).then(() => {
-        console.log(item.FrKey);
+       
         
          const dbref = ref(db, `friend/${item.FriendKey}`);
          remove(dbref);

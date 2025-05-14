@@ -46,7 +46,7 @@ const FriendRequest = ({
     };
   }, []);
 
-  console.log(requestlist);
+  
   /**
    * todo : accept friend request
    * What we will work: we push our all data in friend database and also remove data from friend request databse
@@ -55,7 +55,7 @@ const FriendRequest = ({
    * */
 
   const acceptfriendRequest = (item) => {
-console.log(item);
+
     set(push(ref(db, "friend/")), {
       ...item, 
     }).then(() => {

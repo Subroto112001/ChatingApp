@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Profilegroup from "../../../assets/FriendGroup.jpg";
 import { getDatabase, onValue, ref, set } from "firebase/database";
@@ -7,7 +7,9 @@ import Modal from "react-modal";
 import { closeModal, openModal } from "../../../utiles/modals.utils";
 import { validationgroup } from "../../../Validation/grouplist.validation";
 import { handleChange } from "../../../utiles/HandleChange.utiles";
-
+import { cloudinaryUploadImage } from "../../../utiles/Cloudinary.utiles";
+import { firebaseUpload } from "../../../utiles/UploadFirebase.utiles";
+import { getAuth } from "firebase/auth";
 const GroupList = ({
   BtnStyle,
   CardEliment,
@@ -20,6 +22,8 @@ const GroupList = ({
   PeraText,
   peraStyle,
 }) => {
+const auth = getAuth()
+  const inputRef = useRef(null)
   const [userlist, setUserlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
@@ -73,22 +77,6 @@ const [newloading, setNewloading] = useState(false)
   }, []);
  
 
-
-  // validation function
-
-  // const validationgroup = (groupInfo = {}) => {
-  //   let eror = {};
-
-  //   for (let field in groupInfo) {
-  //     if (groupInfo[field] == "") {
-  //       eror[`${field}Error`] = `${field} Missing`;
-  //     }
-  //   }
-
-  //   setError(eror);
-  //   return Object.keys(eror)?.length === 0;
-  // };
-
   /**
    *
    * todo : Create A group
@@ -111,18 +99,23 @@ const [newloading, setNewloading] = useState(false)
     formdata.append("file", groupInfo.groupImage[0]);
     formdata.append("upload_preset", import.meta.env.VITE_UPLOAD_PRESET);
   
-    const cloudinaryApi = import.meta.env.VITE_CLOUDINARY_API;
-    console.log(cloudinaryApi);
+   
    
     setNewloading(true);
     try {
-      const res = await fetch(cloudinaryApi, {
-        method: "POST",
-        body : formdata
-      })
-const data = await res.json()
-      console.log(data.secure_url);
-      
+    const Url =  await cloudinaryUploadImage(formdata);
+    // console.log(Url);
+    
+
+      await firebaseUpload("Grouplist/", {
+        adminUid: auth.currentUser.uid,
+        adminName: auth.currentUser.displayName,
+        adminEmail: auth.currentUser.email,
+        adminPhoto: auth.currentUser.photoURL,
+        groupName: groupInfo.groupName,
+        groupTagName: groupInfo.groupTagName,
+       groupImage : Url
+      });
     } catch (eroor) {
       console.log( "eroor from casthc error cloudinary",eroor);
       
@@ -135,9 +128,16 @@ const data = await res.json()
       });
       setError({})
       closeModal(setIsOpen);
+      if (inputRef.current) {
+        inputRef.current.value = null
+      }
     }
 
   };
+
+console.log(inputRef.current);
+
+
 
   // handle key
 
@@ -146,6 +146,7 @@ const data = await res.json()
   //   const eroor = validationgroup(groupInfo);
   //     setError(eroor);
   // }
+// console.log(groupInfo?.groupImage[0]?.name);
 
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
@@ -232,6 +233,7 @@ const data = await res.json()
                   // onKeyUp={handlekey}
                   type="text"
                   id="success"
+                  value={groupInfo.groupName}
                   name="groupName"
                   className="bg-green-50 border border-green-500 text-green-900 dark:text-green-400 placeholder-green-700 dark:placeholder-green-500 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-green-500"
                   placeholder="Enter Group Name"
@@ -251,6 +253,7 @@ const data = await res.json()
                   Group Tag name
                 </label>
                 <input
+                  value={groupInfo.groupTagName}
                   type="text"
                   id="success"
                   onChange={(event) =>
@@ -294,9 +297,17 @@ const data = await res.json()
                       <span class="font-semibold">Click to upload</span> or drag
                       and drop
                     </p>
-                    <p class="text-xs text-white ">
-                      SVG, PNG, JPG or GIF (MAX. 800x400px)
-                    </p>
+
+                    {groupInfo?.groupImage ? (
+                      <p className="text-xs text-white ">
+                        {groupInfo?.groupImage[0]?.name}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-white ">
+                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                      </p>
+                    )}
+
                     {error.groupImageError && (
                       <span class="mt-2 text-sm text-red-500">
                         {error.groupImageError}
@@ -307,6 +318,7 @@ const data = await res.json()
                     id="dropzone-file"
                     name="groupImage"
                     type="file"
+                    ref={inputRef}
                     // onKeyUp={handlekey}
                     class="hidden"
                     onChange={(event) =>
