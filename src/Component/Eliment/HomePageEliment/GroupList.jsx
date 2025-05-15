@@ -24,7 +24,8 @@ const GroupList = ({
   PeraText,
   peraStyle,
 }) => {
-const auth = getAuth()
+
+  const auth = getAuth()
   const inputRef = useRef(null)
   const [userlist, setUserlist] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -87,10 +88,7 @@ const [newloading, setNewloading] = useState(false)
 
   const handleCreateGroup = async () => {
     const eroor = validationgroup(groupInfo, setError);
-
     if (!eroor) return
-
-
     /**
      * 
      * todo : update image to coludinary
@@ -100,15 +98,10 @@ const [newloading, setNewloading] = useState(false)
     const formdata = new FormData()
     formdata.append("file", groupInfo.groupImage[0]);
     formdata.append("upload_preset", import.meta.env.VITE_UPLOAD_PRESET);
-  
-   
-   
+
     setNewloading(true);
     try {
     const Url =  await cloudinaryUploadImage(formdata);
-    // console.log(Url);
-    
-
       await firebaseUpload("Grouplist/", {
         adminUid: auth.currentUser.uid,
         adminName: auth.currentUser.displayName,
@@ -138,18 +131,9 @@ const [newloading, setNewloading] = useState(false)
   };
 
 console.log(inputRef.current);
-useFetchDatafromFirebase("Grouplist/");
+const { fulldata } = useFetchDatafromFirebase("Grouplist/");
 
-
-  // handle key
-
-  // const handlekey = (e) => {
-  //   validationgroup(groupInfo);
-  //   const eroor = validationgroup(groupInfo);
-  //     setError(eroor);
-  // }
-// console.log(groupInfo?.groupImage[0]?.name);
-
+ 
   const [Totalnumber, setTotalnumber] = useState(VariantNumber);
 
   if (loading) {
@@ -163,7 +147,7 @@ useFetchDatafromFirebase("Grouplist/");
             <h2 className="text-[20px] flex flex-row justify-center items-center font-semibold text-black">
               {HeaderText} &nbsp;
               <span className="bg-red-400 text-[18px] w-6 h-6 rounded-full flex justify-center items-center">
-                {Totalnumber}
+                {fulldata.length}
               </span>
             </h2>
             <button
@@ -174,26 +158,24 @@ useFetchDatafromFirebase("Grouplist/");
             </button>
           </div>
           <div className={BoxStyle}>
-            {[...new Array(Totalnumber)].map((_, index) => (
+            {fulldata.map((item, index) => (
               <div
                 className={
-                  Totalnumber - 1 == index
-                    ? "flex justify-between items-center pt-4 pb-5 "
-                    : "flex justify-between items-center pt-4 pb-5 bordercolor"
+                  "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
                 key={index}
               >
                 <div className="flex justify-center items-center  gap-[15px]">
                   <picture>
                     <img
-                      src={Profilegroup}
+                      src={item.groupImage}
                       alt={Profilegroup}
                       className={CardEliment}
                     />
                   </picture>
                   <div>
-                    <h3 className={HeaderName}>Friends Reunion</h3>
-                    <p className={Subheader}>Hi Guys, Wassup!</p>
+                    <h3 className={HeaderName}>{item.groupName}</h3>
+                    <p className={Subheader}>{item.groupTagName}</p>
                   </div>
                 </div>
                 <button className={BtnStyle}>{ButtonText}</button>

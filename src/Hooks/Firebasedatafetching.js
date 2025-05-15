@@ -1,21 +1,22 @@
 import { getDatabase, ref, get } from "firebase/database";
 import { useEffect, useState } from "react";
-
+import { getAuth } from "firebase/auth";
 const useFetchDatafromFirebase = (dbName) => {
   const db = getDatabase();
-
+const auth = getAuth();
   const [infoList, setInfoList] = useState({
     data: [],
-    error: null,
-    loading: false,
+    fulldata : [],
+    errror: null,
+    looading: false,
   });
 
   useEffect(() => {
     const fetchData = async () => {
         setInfoList((prev) => ({
           ...prev,
-          loading: true,
-          error: null,
+          looading: true,
+          errror: null,
         }));
 
       try {
@@ -23,32 +24,45 @@ const useFetchDatafromFirebase = (dbName) => {
         // const snapshot = await get(ref(db, dbName));
         if (snapshot.exists()) {
           const NewListBlankArr = [];
+          const fulllistarry = []
           snapshot.forEach((item) => {
-            NewListBlankArr.push({
-              ...item.val(),
-              [`${dbName.replace("/", "")}key`]: item.key,
-            });
+            if (auth.currentUser.uid == item.val().adminUid) {
+              NewListBlankArr.push({
+                ...item.val(),
+                [`${dbName.replace("/", "")}key`]: item.key,
+              });
+            }
+         
+              fulllistarry.push({
+                ...item.val(),
+                [`${dbName.replace("/", "")}key`]: item.key,
+              });
+            
           });
 
           setInfoList({
             data: NewListBlankArr,
-            error: null,
-            loading: false,
+            fulldata : fulllistarry,
+            errror: null,
+            looading: false,
           });
         } else {
-            setInfoList({
-              data: [],
-              error: new Error("No data available"),
-              loading: false,
-            });
+          setInfoList({
+            data: [],
+            fulldata: [],
+
+            errror: new Error("No data available"),
+            looading: false,
+          });
         }
-      } catch (error) {
+      } catch (errror) {
         setInfoList({
           data: [],
-          error,
-          loading: false,
+          fulldata: [],
+          errror,
+          looading: false,
         });
-        console.error("Firebase get() error:", error);
+        console.error("Firebase get() error:", errror);
       }
     };
 
