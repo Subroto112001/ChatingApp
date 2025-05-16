@@ -12,6 +12,7 @@ import { firebaseUpload } from "../../../utiles/UploadFirebase.utiles";
 import { getAuth } from "firebase/auth";
 import { useFetchData } from "../../../Hooks/FetchData";
 import { useFetchDatafromFirebase } from "../../../Hooks/Firebasedatafetching";
+import GroupError from "../ErrorPage/GroupError";
 const GroupList = ({
   BtnStyle,
   CardEliment,
@@ -131,14 +132,15 @@ const [newloading, setNewloading] = useState(false)
   };
 
 console.log(inputRef.current);
-const { fulldata } = useFetchDatafromFirebase("Grouplist/");
+const { fulldata, errror } = useFetchDatafromFirebase("Grouplist/");
 
  
-  const [Totalnumber, setTotalnumber] = useState(VariantNumber);
-
-  if (loading) {
-    return <LoadingSkeliton />;
+  if (true) {
+    return <GroupError/>
   }
+    if (loading) {
+      return <LoadingSkeliton />;
+    }
   return (
     <>
       <div className="Group  mt-[20px]">
