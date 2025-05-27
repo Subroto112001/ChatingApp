@@ -4,9 +4,13 @@ import { ToastContainer } from "react-toastify";
 import './index.css'
 import App from './App.jsx'
 import database from "../DataBase/Firebase.config.js"
-createRoot(document.getElementById('root')).render(
+import { Provider } from 'react-redux';
+import { store } from './features/store.js';
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ToastContainer/>
-    <App />
-  </StrictMode>,
-)
+    <ToastContainer />
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </StrictMode>
+);

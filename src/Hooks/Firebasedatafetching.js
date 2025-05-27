@@ -68,9 +68,10 @@ const auth = getAuth();
 
     fetchData();
   }, [dbName]);
-console.log(infoList);
+
 
   return infoList;
 };
 
 export { useFetchDatafromFirebase };
+

@@ -34,4 +34,5 @@ const useFetchData = () => {
     
 }
 
-export { useFetchData};
+export { useFetchData };
+
