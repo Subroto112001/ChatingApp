@@ -6,6 +6,7 @@ import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment";
 import { FaMinus } from "react-icons/fa";
+import { RxAvatar } from "react-icons/rx";
 const UserList = ({
   BtnStyle,
   CardEliment,
@@ -25,6 +26,8 @@ const UserList = ({
   const [loggeduser, setLoggeduser] = useState();
   const [friendRequestlist, setfriendRequestlist] = useState([]);
   const [Requestsent, setRequestsent] = useState([]);
+
+  const [friend, setFriend] = useState([])
   /**
    * todo : fetching data from database
    * Database : firebase
@@ -162,11 +165,61 @@ const UserList = ({
       });
   };
 
-  const [Totalnumber, setTotalnumber] = useState(userlist.length);
+/**
+ * todo : fetch friend list from database
+ * 
+ * */ 
 
-  if (loading) {
-    return <LoadingSkeliton />;
-  }
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchfriendData = () => {
+      const UseRef = ref(db, "friend/");
+      onValue(UseRef, (snapshot) => {
+        let friendBlanklist = [];
+
+        snapshot.forEach((item) => {
+        
+           friendBlanklist.push({ ...item.val(), FriendKey: item.key });
+         
+        });
+        setFriend(friendBlanklist);
+        setLoading(false);
+      });
+    };
+    fetchfriendData();
+
+
+    return () => {
+          const UseRef = ref(db, "friend/");
+          off(UseRef);
+        };
+  }, []);
+
+
+console.log("friend",friend);
+console.log("useer", userlist);
+console.log(auth.currentUser.uid);
+console.log("friendrequ",friendRequestlist);
+
+let content = ""
+  if (friendRequestlist[0]) {
+   
+    content = (
+      <button className={BtnStyle}>
+        <FaMinus />
+      </button>
+    )
+    if (friend[0].Frkey) {
+        content = (<button className={BtnStyle}>{<RxAvatar />}</button>);
+      };
+
+
+
+ }
+   if (loading) {
+     return <LoadingSkeliton />;
+   }
   return (
     <>
       <div className="Group  mt-[20px]">
@@ -184,9 +237,7 @@ const UserList = ({
             {userlist.map((item, index) => (
               <div
                 className={
-                  Totalnumber - 1 == index
-                    ? "flex justify-between items-center pt-4 pb-5 "
-                    : "flex justify-between items-center pt-4 pb-5 bordercolor"
+                  "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
                 key={item.userUid}
               >
@@ -206,13 +257,10 @@ const UserList = ({
                 {friendRequestlist.includes(
                   auth.currentUser.uid.concat(item.userUid)
                 ) ? (
-                  <button
-                    className={BtnStyle}
-                    onClick={() => HandleFriendRequestremove(item)}
-                  >
+                  <button className={BtnStyle}>
                     <FaMinus />
                   </button>
-                ) : (
+                )  : (
                   <button
                     className={BtnStyle}
                     onClick={() => HandleFriendRequest(item)}

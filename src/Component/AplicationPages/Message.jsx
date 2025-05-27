@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-
-
+import { FaCamera, FaTelegram } from "react-icons/fa";
+import { FaRegSmile } from "react-icons/fa";
+import { FaTelegramPlane } from "react-icons/fa";
 import PictureForMessage from "../../assets/ProfilePic.jpg";
 import InputboxForpages from "../Comon/InputboxForpages";
-
+import EmojiPicker from "emoji-picker-react";
 import { getDatabase, off, onValue, push, ref } from "firebase/database";
 import { getAuth } from "firebase/auth";
 const Message = ({
@@ -15,9 +16,15 @@ const Message = ({
   BtnStyle,
 }) => {
   const auth = getAuth();
-
-  const [frienddata, setFriendData] = useState([]);
   const db = getDatabase();
+
+  // friendlist data will store here 
+  const [frienddata, setFriendData] = useState([]);
+
+
+  // massege state will here
+  const [massege, setMassege] = useState("")
+
 
   useEffect(() => {
     const fetchfriendData = () => {
@@ -40,6 +47,13 @@ const Message = ({
     };
   }, []);
 
+  const handleEmojipciker = () => {
+  
+}
+
+
+
+  
   return (
     <div className="flex justify-between ">
       <div className="w-[36%] h-[96vh] flex flex-col ">
@@ -136,24 +150,33 @@ const Message = ({
           {/* right side msg */}
         </div>
 
-        <hr className="mt-3" />
         {/* msg sending jsx */}
-        <div className="absolute w-[810px] bottom-4 flex ">
+        <div className="absolute w-[810px] bottom-4 flex items-center">
           <input
             type="text"
-            className="outline-none bg-gray-400 rounded-xl w-full px-3 py-2 relative"
+            className="outline-none font-medium text-[16px] bg-gray-400 rounded-xl w-full px-3 py-2 relative"
+            placeholder="Type your message"
+            onChange={(e) => setMassege(e.target.value)}
           />
-          <div>
-            <span></span>
+          <div className=" flex gap-3 absolute right-[60px] top-[24%]">
+            <span className="text-2xl cursor-pointer" onClick={handleEmojipciker}>
+              <FaRegSmile />
+            </span>
+            <span className="text-2xl cursor-pointer">
+              <FaCamera />
+            </span>
           </div>
-          <button className="px-2 py-3 bg-blue-500 ml-2 rounded-xl text-[16px] font-medium ">
-            Send
-          </button>
+          <span className=" cursor-pointer ml-2 rounded-full text-3xl font-medium ">
+            <FaTelegram className="text-blue-600" />
+          </span>
         </div>
 
         {/* msg sending jsx */}
       </div>
       {/* Chat zone */}
+      <div className="absolute bottom-[90px] right-12">
+        <EmojiPicker />
+      </div>
     </div>
   );
 };
