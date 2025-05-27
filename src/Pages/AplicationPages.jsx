@@ -5,6 +5,7 @@ import Slidebar from "../Component/HomePageComponent/Slidebar";
 import { Outlet, useNavigate } from "react-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Errorpage from "../Component/Eliment/ErrorPage/Errorpage";
+import LoginPage  from "./LogInPage"
 const AplicationPages = () => {
   const auth = getAuth();
   const [isVerified, setIsVerified] = useState(false);
@@ -30,7 +31,7 @@ const navigate = useNavigate()
           </div>
         </div>
       ) : (
-        <Errorpage />
+        <LoginPage />
       )}
     </div>
   );

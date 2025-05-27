@@ -135,7 +135,7 @@ console.log(inputRef.current);
 const { fulldata, errror } = useFetchDatafromFirebase("Grouplist/");
 
  
-  if (true) {
+  if (false) {
     return <GroupError/>
   }
     if (loading) {
