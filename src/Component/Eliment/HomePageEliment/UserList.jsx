@@ -27,7 +27,7 @@ const UserList = ({
   const [friendRequestlist, setfriendRequestlist] = useState([]);
   const [Requestsent, setRequestsent] = useState([]);
 
-  const [friend, setFriend] = useState([])
+  const [friend, setFriend] = useState([]);
   /**
    * todo : fetching data from database
    * Database : firebase
@@ -107,39 +107,30 @@ const UserList = ({
    *
    * */
 
+  // Fetch friend requests
   useEffect(() => {
-    if (!loggeduser) return;
+    if (!auth.currentUser) return;
+    const UseRef = ref(db, "friendRequest/");
+    onValue(UseRef, (snapshot) => {
+      let sent = [];
+      let received = [];
 
-    const fetcfriendRequesthdata = () => {
-      const UseRef = ref(db, "friendRequest/");
-      onValue(UseRef, (snapshot) => {
-        let userfriendRequestBlanklist = [];
-
-        snapshot.forEach((item) => {
-          console.log(item.val());
-
-          if (
-            auth.currentUser.uid ||
-            loggeduser.userUid === item.val().SenderUid
-          ) {
-            userfriendRequestBlanklist.push(
-              loggeduser.userUid + item.val().ReciverUid
-            );
-          }
-        });
-
-        setfriendRequestlist(userfriendRequestBlanklist);
+      snapshot.forEach((item) => {
+        const request = item.val();
+        if (request.SenderUid === auth.currentUser.uid) {
+          sent.push(request.ReciverUid);
+        }
+        if (request.ReciverUid === auth.currentUser.uid) {
+          received.push(request.SenderUid);
+        }
       });
-    };
 
-    fetcfriendRequesthdata();
+      setRequestsent(sent);
+      setfriendRequestlist(received);
+    });
 
-    // cleanup funtion
-    return () => {
-      const UseRef = ref(db, "friendRequest/");
-      off(UseRef);
-    };
-  }, [loggeduser]);
+    return () => off(UseRef);
+  }, []);
 
   // console.log(friendRequestlist);
 
@@ -151,75 +142,72 @@ const UserList = ({
    * */
 
   const HandleFriendRequestremove = (item) => {
-    // it is not working
     const db = getDatabase();
-    console.log(item.userKey);
+    const requestRef = ref(db, "friendRequest/");
 
-    const dbref = ref(db, `friendRequest/${item.userKey}`);
-    remove(dbref)
-      .then(() => {
-        console.log("Friend request deleted successfully!");
-      })
-      .catch((error) => {
-        console.error("Error deleting friend request:", error);
-      });
-  };
+    onValue(
+      requestRef,
+      (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const request = childSnapshot.val();
+          const requestKey = childSnapshot.key;
 
-/**
- * todo : fetch friend list from database
- * 
- * */ 
-
-
-  useEffect(() => {
-    setLoading(true);
-    const fetchfriendData = () => {
-      const UseRef = ref(db, "friend/");
-      onValue(UseRef, (snapshot) => {
-        let friendBlanklist = [];
-
-        snapshot.forEach((item) => {
-        
-           friendBlanklist.push({ ...item.val(), FriendKey: item.key });
-         
+          // Match only your sent request
+          if (
+            request.SenderUid === auth.currentUser.uid &&
+            request.ReciverUid === item.userUid
+          ) {
+            remove(ref(db, `friendRequest/${requestKey}`))
+              .then(() => {
+                console.log("Friend request removed successfully.");
+              })
+              .catch((error) => {
+                console.error("Failed to remove friend request:", error);
+              });
+          }
         });
-        setFriend(friendBlanklist);
-        setLoading(false);
+      },
+      {
+        onlyOnce: true, // Ensures it runs once and unsubscribes
+      }
+    );
+  };
+  
+
+  /**
+   * todo : fetch friend list from database
+   *
+   * */
+
+  // Fetch friends
+  useEffect(() => {
+    const UseRef = ref(db, "friend/");
+    onValue(UseRef, (snapshot) => {
+      let friendUids = [];
+
+      snapshot.forEach((item) => {
+        const f = item.val();
+        if (
+          f.SenderUid === auth.currentUser.uid ||
+          f.ReciverUid === auth.currentUser.uid
+        ) {
+          friendUids.push(
+            f.SenderUid === auth.currentUser.uid ? f.ReciverUid : f.SenderUid
+          );
+        }
       });
-    };
-    fetchfriendData();
 
+      setFriend(friendUids);
+      setLoading(false);
+    });
 
-    return () => {
-          const UseRef = ref(db, "friend/");
-          off(UseRef);
-        };
+    return () => off(UseRef);
   }, []);
 
 
-console.log("friend",friend);
-console.log("useer", userlist);
-console.log(auth.currentUser.uid);
-console.log("friendrequ",friendRequestlist);
-
-let content = ""
-  if (friendRequestlist[0]) {
-   
-    content = (
-      <button className={BtnStyle}>
-        <FaMinus />
-      </button>
-    )
-    if (friend[0].Frkey) {
-        content = (<button className={BtnStyle}>{<RxAvatar />}</button>);
-      };
-
-
-
- }
-   if (loading) {
-     return <LoadingSkeliton />;
-   }
+  if (loading) {
+    return <LoadingSkeliton />;
+  }
   return (
     <>
       <div className="Group  mt-[20px]">
@@ -254,13 +242,22 @@ let content = ""
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                {friendRequestlist.includes(
-                  auth.currentUser.uid.concat(item.userUid)
-                ) ? (
-                  <button className={BtnStyle}>
+                {Requestsent.includes(item.userUid) ? (
+                  <button
+                    className={BtnStyle}
+                    onClick={() => HandleFriendRequestremove(item)}
+                  >
                     <FaMinus />
                   </button>
-                )  : (
+                ) : friendRequestlist.includes(item.userUid) ? (
+                  <button className={BtnStyle}>
+                    Pending {/* Waiting for your response */}
+                  </button>
+                ) : friend.includes(item.userUid) ? (
+                  <button className={BtnStyle}>
+                    <RxAvatar className="text-xl" /> {/* Already Friends */}
+                  </button>
+                ) : (
                   <button
                     className={BtnStyle}
                     onClick={() => HandleFriendRequest(item)}
@@ -268,6 +265,7 @@ let content = ""
                     {ButtonText}
                   </button>
                 )}
+
                 <p className={peraStyle}>{PeraText}</p>
               </div>
             ))}
