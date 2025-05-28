@@ -2,29 +2,28 @@ import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCamera, FaTelegram } from "react-icons/fa";
 import { FaRegSmile } from "react-icons/fa";
-import { FaTelegramPlane } from "react-icons/fa";
+
 import PictureForMessage from "../../assets/ProfilePic.jpg";
 import InputboxForpages from "../Comon/InputboxForpages";
 import EmojiPicker from "emoji-picker-react";
-import { getDatabase, off, onValue, push, ref } from "firebase/database";
+import { getDatabase, off, onValue, push, set, ref } from "firebase/database";
 import { getAuth } from "firebase/auth";
-const Message = ({
-  BoxStyle,
-  CardEliment,
-  HeaderName,
-  Subheader,
-  BtnStyle,
-}) => {
+import Friends from "../Eliment/HomePageEliment/Friends";
+import { useSelector } from "react-redux";
+import moment from "moment";
+
+const Message = () => {
   const auth = getAuth();
   const db = getDatabase();
-
-  // friendlist data will store here 
+  const { value: user } = useSelector((store) => store.friend);
+  // friendlist data will store here
   const [frienddata, setFriendData] = useState([]);
-
+  const [eomjiopen, setEmojiOpen] = useState(false);
 
   // massege state will here
-  const [massege, setMassege] = useState("")
-
+  const [massege, setMassege] = useState("");
+  const [sendermsg, setSendermsg] = useState([]);
+  const [receivermsg, setReceivermsg] = useState([]);
 
   useEffect(() => {
     const fetchfriendData = () => {
@@ -47,13 +46,70 @@ const Message = ({
     };
   }, []);
 
-  const handleEmojipciker = () => {
-  
-}
+  /**
+   *
+   * todo : emoji value handle
+   *
+   * */
 
+  const handleEmojiPicker = ({ emoji }) => {
+    console.log(emoji);
 
+    setMassege((prev) => prev + emoji);
+  };
 
-  
+  /**
+   *
+   * todo : upload database user sending massege
+   *
+   * */
+
+  const sendMassege = async () => {
+    try {
+      push(ref(db, "Singlemsg/"), {
+        msgSenderUid: auth.currentUser.uid,
+        msgSenderUserName: auth.currentUser.displayName,
+        msgSenderUserEmail: auth.currentUser.email,
+        msgSenderUserProfilePicture: auth.currentUser.photoURL,
+        msgReciverUid: user.userUID,
+        msgReciverName: user.userName,
+        msgReciverEmail: user.userEmail,
+        msgReciverProfilePicture: user.userProfilePicture,
+        userMsg: massege,
+        createADate: moment().format("MM DD YYYY, h:mm:ss a"),
+      });
+      
+    } catch (error) {
+      console.log("This error from masseage sending option", error);
+    } finally {
+      setMassege("");
+    }
+  };
+
+  useEffect(() => {
+    const fetchmsgdata = () => {
+      const MsgRef = ref(db, "Singlemsg/");
+      onValue(MsgRef, (snapshot) => {
+        let blankSenderMsgbox = [];
+        let blankReciverMsgbox = [];
+        snapshot.forEach((item) => {
+          if (auth.currentUser.uid === item.val().msgSenderUid) {
+            blankSenderMsgbox.push({ ...item.val(), msgKey: item.key });
+          }
+          if (auth.currentUser.uid === item.val().msgReciverUid) {
+            blankReciverMsgbox.push({ ...item.val(), msgKey: item.key });
+          }
+        });
+        setSendermsg(blankSenderMsgbox);
+        setReceivermsg(blankReciverMsgbox);
+      });
+    };
+    fetchmsgdata();
+  }, []);
+
+  console.log("sender", sendermsg);
+  console.log("receiver", receivermsg);
+
   return (
     <div className="flex justify-between ">
       <div className="w-[36%] h-[96vh] flex flex-col ">
@@ -61,41 +117,9 @@ const Message = ({
           SearchIconClass={"absolute top-[35%] left-[20px] text-2xl"}
         />
         {/* friend Request zone */}
-        <div
-          className={
-            "rounded-[20px] shadow-[0px_12px_23px_-2px_rgba(0,_0,_0,_0.1)] pl-[29px] pr-[27px] flex flex-col gap-y-[20px]"
-          }
-        >
-          {frienddata.map((item, index) => (
-            <div
-              className={
-                "flex justify-between items-center pt-4 pb-5 bordercolor "
-              }
-              key={index}
-            >
-              <div className="flex justify-center items-center  gap-[15px] w-[80px h-[80px] rounded-full">
-                <picture>
-                  <img
-                    src={item.SenderProfilePicture}
-                    alt={item.SenderProfilePicture}
-                    className={"w-[70px] h-[70px]  rounded-full object-cover"}
-                  />
-                </picture>
-                <div>
-                  <h3 className={"text-[18px] font-bold text-black"}>
-                    {item.SenderUserName}
-                  </h3>
-                  <p className={"text-[14px] font-medium text-sms"}>
-                    Hi Guys, Wassup!
-                  </p>
-                </div>
-              </div>
-              <button className={BtnStyle} onClick={() => blockfriend(item)}>
-                Block
-              </button>
-            </div>
-          ))}
-        </div>
+
+        <Friends showBtn={false} />
+
         {/* friend Request zone */}
       </div>
       {/* Chat zone */}
@@ -105,7 +129,7 @@ const Message = ({
             <div className="w-[75px] h-[75px] rounded-full relative">
               <picture>
                 <img
-                  src={PictureForMessage}
+                  src={user.userProfilePicture}
                   alt={PictureForMessage}
                   className="w-[75px] h-[75px] rounded-full object-cover"
                 />
@@ -114,8 +138,12 @@ const Message = ({
             </div>
             <hr mt-3 />
             <div>
-              <h3 className="text-[24px] font-semibold text-black">Subroto</h3>
-              <p className="text-[14px] font-normal text-black">Online</p>
+              <h3 className="text-[24px] font-semibold text-black">
+                {user.userName}
+              </h3>
+              <p className="text-[14px] font-normal text-black">
+                {navigator.onLine ? "Online" : "Offline"}
+              </p>
             </div>
           </div>
           <div>
@@ -124,50 +152,63 @@ const Message = ({
         </div>
         {/* message */}
         <div className="flex mt-[56px] flex-col   ">
-          <div
-            className="self-start
+          {/* left side msg */}
+          {receivermsg.map((item, index) => (
+            <div
+              className="self-start
           "
-          >
-            <div className="flex flex-col items-start ">
-              {/* left side msg */}
-              <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
-                <h3 className="text-[ ]"> Hey There what's upp !</h3>
+              key={item.msgKey}
+            >
+              <div className="flex flex-col items-start ">
+                <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
+                  <h3 className="text-[ ]"> {item.userMsg}</h3>
+                </div>
+                <p className="ml-3 mt-1">Today, 2.02 pm</p>
               </div>
-              <p className="ml-3 mt-1">Today, 2.02 pm</p>
             </div>
-          </div>
+          ))}
           {/* left side msg */}
           {/* right side msg */}
-          <div className="self-end">
-            {" "}
-            <div className="flex flex-col items-start ">
-              <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
-                <h3 className="text-[ ]"> Hey There what's upp !</h3>
+          {sendermsg.map((item, index) => (
+            <div className="self-end" key={item.msgKey}>
+              {" "}
+              <div className="flex flex-col items-start ">
+                <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
+                  <h3 className="text-[ ]"> {item.userMsg}</h3>
+                </div>
+                <p className="ml-3 mt-1">Today, 2.02 pm</p>
               </div>
-              <p className="ml-3 mt-1">Today, 2.02 pm</p>
             </div>
-          </div>
+          ))}
+
           {/* right side msg */}
         </div>
 
         {/* msg sending jsx */}
-        <div className="absolute w-[810px] bottom-4 flex items-center">
+        <div className="absolute w-[96%] bottom-4 flex items-center">
           <input
             type="text"
-            className="outline-none font-medium text-[16px] bg-gray-400 rounded-xl w-full px-3 py-2 relative"
+            className="outline-none font-medium text-white text-[16px] bg-blue rounded-xl w-full px-3 py-2 relative"
             placeholder="Type your message"
+            value={massege}
             onChange={(e) => setMassege(e.target.value)}
           />
           <div className=" flex gap-3 absolute right-[60px] top-[24%]">
-            <span className="text-2xl cursor-pointer" onClick={handleEmojipciker}>
-              <FaRegSmile />
+            <span
+              className="text-2xl cursor-pointer"
+              onClick={() => setEmojiOpen(!eomjiopen)}
+            >
+              <FaRegSmile className="text-white" />
             </span>
             <span className="text-2xl cursor-pointer">
-              <FaCamera />
+              <FaCamera className="text-white" />
             </span>
           </div>
-          <span className=" cursor-pointer ml-2 rounded-full text-3xl font-medium ">
-            <FaTelegram className="text-blue-600" />
+          <span
+            className=" cursor-pointer ml-2 rounded-full text-3xl font-medium "
+            onClick={sendMassege}
+          >
+            <FaTelegram className="text-blue" />
           </span>
         </div>
 
@@ -175,7 +216,7 @@ const Message = ({
       </div>
       {/* Chat zone */}
       <div className="absolute bottom-[90px] right-12">
-        <EmojiPicker />
+        <EmojiPicker open={eomjiopen} onEmojiClick={handleEmojiPicker} />
       </div>
     </div>
   );

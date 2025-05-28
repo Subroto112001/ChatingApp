@@ -8,11 +8,13 @@ export const friendSlice = createSlice({
       value : {}
   },
   reducers: {
-   
+    ActionForFriend: (state, action) => {
+      state.value = action.payload
+   }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {} = friendSlice.actions;
+export const { ActionForFriend } = friendSlice.actions;
 
 export default friendSlice.reducer;

@@ -54,19 +54,7 @@ const GroupContet = () => {
         </div>
         <div className="w-[27%]  flex flex-col ">
           {/* firends zonde */}
-          <Friends
-            CardEliment={"w-[50px] h-[50px] rounded-full"}
-            HeaderName={"text-[14px] font-semibold text-black"}
-            Subheader={"text-[12px] font-medium text-sms"}
-            BtnStyle={
-              "text-[20px] text-white font-semibold pl-[22px] pr-[22px] rounded cursor-pointer bg-blue"
-            }
-            HeaderText={"Friends"}
-            BoxStyle={"h-[48dvh] overflow-x-scroll"}
-            VariantNumber={7}
-            PeraText={"Today, 8:56pm"}
-            peraStyle={"text-[10px] text-gray font-medium"}
-          />
+          <Friends />
 
           {/* firends zonde */}
           {/* friend Group zone */}
