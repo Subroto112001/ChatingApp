@@ -5,7 +5,7 @@ import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/data
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment";
-import { FaMinus } from "react-icons/fa";
+import { FaMinus, FaUserClock, FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { RxAvatar } from "react-icons/rx";
 const UserList = ({
   BtnStyle,
@@ -144,20 +144,19 @@ const UserList = ({
   const HandleFriendRequestremove = (item) => {
     const db = getDatabase();
     const requestRef = ref(db, "friendRequest/");
+console.log(item);
 
     onValue(
       requestRef,
       (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-          const request = childSnapshot.val();
-          const requestKey = childSnapshot.key;
-
+        snapshot.forEach((items) => {
+         
           // Match only your sent request
           if (
-            request.SenderUid === auth.currentUser.uid &&
-            request.ReciverUid === item.userUid
+            items.val().SenderUid === auth.currentUser.uid &&
+            items.val().ReciverUid === item.userUid
           ) {
-            remove(ref(db, `friendRequest/${requestKey}`))
+            remove(ref(db, `friendRequest/${items.key}`))
               .then(() => {
                 console.log("Friend request removed successfully.");
               })
@@ -205,6 +204,7 @@ const UserList = ({
     return () => off(UseRef);
   }, []);
 
+console.log(auth);
 
   if (loading) {
     return <LoadingSkeliton />;
@@ -244,27 +244,47 @@ const UserList = ({
                   </div>
                 </div>
                 {Requestsent.includes(item.userUid) ? (
+                  // friend request remove code
                   <button
-                    className={BtnStyle}
-                    onClick={() => HandleFriendRequestremove(item)}
+                  className={
+                    "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                  }
+                  onClick={() => HandleFriendRequestremove(item)}
                   >
-                    <FaMinus />
+                    <FaUserMinus />
                   </button>
+                    // friend request remove code
                 ) : friendRequestlist.includes(item.userUid) ? (
-                  <button className={BtnStyle}>
-                    Pending {/* Waiting for your response */}
+                  // pending request ui code
+                  <button
+                  className={
+                    "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                  }
+                  >
+                    <FaUserClock />
                   </button>
-                ) : friend.includes(item.userUid) ? (
-                  <button className={BtnStyle}>
+                    // pending request ui code
+                  ) : friend.includes(item.userUid) ? (
+                      // friend already have ui code
+                      <button
+                      className={
+                        "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                      }
+                      >
                     <RxAvatar className="text-xl" /> {/* Already Friends */}
                   </button>
-                ) : (
-                  <button
-                    className={BtnStyle}
-                    onClick={() => HandleFriendRequest(item)}
-                  >
-                    {ButtonText}
+                    // friend already have ui code
+                    ) : (
+                        // friend requset send code
+                        <button
+                        className={
+                          "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                        }
+                        onClick={() => HandleFriendRequest(item)}
+                        >
+                    <FaUserPlus />
                   </button>
+                    // friend requset send code
                 )}
 
                 <p className={peraStyle}>{PeraText}</p>

@@ -11,7 +11,7 @@ import { getAuth } from "firebase/auth";
 import Friends from "../Eliment/HomePageEliment/Friends";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import { MsgContext } from "../../ContextApi/ContextforMsg";
+
 import { CiChat1 } from "react-icons/ci";
 const Message = () => {
   const auth = getAuth();

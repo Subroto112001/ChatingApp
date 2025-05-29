@@ -107,8 +107,6 @@ const Friends = ({ showBtn = true }) => {
 
  
 
-  console.log(auth.currentUser.uid);
-  console.log(friendlist);
 
   if (loading) {
     return <LoadingSkeliton />;
