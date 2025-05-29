@@ -178,7 +178,13 @@ const Message = () => {
                 }`}
               >
                 <p>{item.userMsg}</p>
-                <p className="text-xs text-right mt-1 text-gray-500">
+                <p
+                  className={`${
+                    item.msgSenderUid === auth.currentUser.uid
+                      ? "text-xs text-right mt-1 text-gray-300"
+                      : "text-xs text-right mt-1 text-gray-500"
+                  }`}
+                >
                   {moment(item.timestamp).format("h:mm a")}
                 </p>
               </div>
