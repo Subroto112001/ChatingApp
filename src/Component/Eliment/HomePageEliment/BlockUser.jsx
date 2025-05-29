@@ -86,8 +86,6 @@ const BlockUser = ({
             {blockuserlist.map((item, index) => (
               <div
                 className={
-                  
-              
                   "flex justify-between items-center pt-4 pb-5 bordercolor"
                 }
                 key={index}
@@ -105,10 +103,10 @@ const BlockUser = ({
                   </div>
                 </div>
                 <button
-                  className={BtnStyle}
+                  className="text-[16px] text-white font-semibold px-2 py-1 rounded cursor-pointer bg-blue"
                   onClick={() => handleunblock(item)}
                 >
-                  {ButtonText}
+                  Unblock
                 </button>
               </div>
             ))}

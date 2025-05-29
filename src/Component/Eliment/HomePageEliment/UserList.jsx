@@ -5,7 +5,7 @@ import { getDatabase, off, onValue, push, ref, remove, set } from "firebase/data
 import LoadingSkeliton from "../Skeliton/LoadingSkeliton";
 import { getAuth } from "firebase/auth";
 import moment from "moment";
-import { FaMinus, FaUserClock, FaUserMinus, FaUserPlus } from "react-icons/fa";
+import { FaMinus, FaUser, FaUserClock, FaUserMinus, FaUserPlus } from "react-icons/fa";
 import { RxAvatar } from "react-icons/rx";
 const UserList = ({
   BtnStyle,
@@ -132,7 +132,43 @@ const UserList = ({
     return () => off(UseRef);
   }, []);
 
-  // console.log(friendRequestlist);
+  /**
+   * 
+   * todo : ffetch blocklist data
+   * */ 
+const [blockuser, setBlockuser] = useState([]);
+  useEffect(() => {
+    if (!auth.currentUser) return;
+    const UseRef = ref(db, "blockuser/");
+    onValue(UseRef, (snapshot) => {
+    let blocklistuser = []
+
+      snapshot.forEach((item) => {
+       
+        if (
+          item.val().SenderUid === auth.currentUser.uid
+    
+        ) {
+          blocklistuser.push(item.val().ReciverUid);
+        }
+        if (item.val().ReciverUid === auth.currentUser.uid) {
+          blocklistuser.push(item.val().SenderUid);
+        }
+       
+      });
+      setBlockuser(blocklistuser);
+ 
+      
+      
+   
+    });
+ 
+    return () => off(UseRef);
+  }, []);
+
+  console.log("block", blockuser);
+  console.log(auth.currentUser.uid);
+  
 
   /**
    * todo : Friend Request remove
@@ -171,8 +207,7 @@ console.log(item);
       }
     );
   };
-  console.log(auth.currentUser);
-  
+ 
 
   /**
    * todo : fetch friend list from database
@@ -186,13 +221,15 @@ console.log(item);
       let friendUids = [];
 
       snapshot.forEach((item) => {
-        const f = item.val();
+       
         if (
-          f.SenderUid === auth.currentUser.uid ||
-          f.ReciverUid === auth.currentUser.uid
+          item.val().SenderUid === auth.currentUser.uid ||
+          item.val().ReciverUid === auth.currentUser.uid
         ) {
           friendUids.push(
-            f.SenderUid === auth.currentUser.uid ? f.ReciverUid : f.SenderUid
+            item.val().SenderUid === auth.currentUser.uid
+              ? item.val().ReciverUid
+              : item.val().SenderUid
           );
         }
       });
@@ -243,48 +280,37 @@ console.log(auth);
                     <p className={Subheader}>Hi Guys, Wassup!</p>
                   </div>
                 </div>
-                {Requestsent.includes(item.userUid) ? (
+                {blockuser.includes(item.userUid) ? (
+                  // blocked user UI
+                  <button className="text-[20px] text-red-500 font-semibold px-5 py-2 rounded cursor-pointer bg-blue">
+                    <FaUser />
+                  </button>
+                ) : Requestsent.includes(item.userUid) ? (
                   // friend request remove code
                   <button
-                  className={
-                    "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
-                  }
-                  onClick={() => HandleFriendRequestremove(item)}
+                    className="text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                    onClick={() => HandleFriendRequestremove(item)}
                   >
                     <FaUserMinus />
                   </button>
-                    // friend request remove code
                 ) : friendRequestlist.includes(item.userUid) ? (
-                  // pending request ui code
-                  <button
-                  className={
-                    "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
-                  }
-                  >
+                  // pending request UI
+                  <button className="text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue">
                     <FaUserClock />
                   </button>
-                    // pending request ui code
-                  ) : friend.includes(item.userUid) ? (
-                      // friend already have ui code
-                      <button
-                      className={
-                        "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
-                      }
-                      >
-                    <RxAvatar className="text-xl" /> {/* Already Friends */}
+                ) : friend.includes(item.userUid) ? (
+                  // already friends UI
+                  <button className="text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue">
+                    <RxAvatar className="text-xl" />
                   </button>
-                    // friend already have ui code
-                    ) : (
-                        // friend requset send code
-                        <button
-                        className={
-                          "text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
-                        }
-                        onClick={() => HandleFriendRequest(item)}
-                        >
+                ) : (
+                  // send friend request UI
+                  <button
+                    className="text-[20px] text-white font-semibold px-5 py-2 rounded cursor-pointer bg-blue"
+                    onClick={() => HandleFriendRequest(item)}
+                  >
                     <FaUserPlus />
                   </button>
-                    // friend requset send code
                 )}
 
                 <p className={peraStyle}>{PeraText}</p>
