@@ -12,7 +12,7 @@ import Friends from '../Eliment/HomePageEliment/Friends';
 import FriendGroup from '../Eliment/HomePageEliment/FriendGroup';
 import UserList from '../Eliment/HomePageEliment/UserList';
 import BlockUser from '../Eliment/HomePageEliment/BlockUser';
-
+import { MsgProvider } from '../../ContextApi/ContextforMsg';
 const GroupContet = () => {
   
   return (
@@ -54,8 +54,10 @@ const GroupContet = () => {
         </div>
         <div className="w-[27%]  flex flex-col ">
           {/* firends zonde */}
-          <Friends />
+          <MsgProvider>
 
+          <Friends />
+          </MsgProvider>
           {/* firends zonde */}
           {/* friend Group zone */}
           <FriendGroup
@@ -72,7 +74,6 @@ const GroupContet = () => {
             BoxStyle={"h-[33dvh] overflow-x-scroll"}
             VariantNumber={8}
           />
-
           {/* friend Group zone */}
         </div>
         {/* <div className="Group  mt-[43px]"> */}

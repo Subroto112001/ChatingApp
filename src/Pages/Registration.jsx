@@ -59,7 +59,7 @@ const navigate = useNavigate()
           const user = userCredential.user;
 
           updateProfile(auth.currentUser, {
-            displayName: "Jane Q. User",
+            displayName: fullname,
             photoURL: "https://example.com/jane-q-user/profile.jpg",
           });
         })

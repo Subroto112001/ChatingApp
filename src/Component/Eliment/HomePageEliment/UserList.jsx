@@ -172,6 +172,7 @@ const UserList = ({
       }
     );
   };
+  console.log(auth.currentUser);
   
 
   /**

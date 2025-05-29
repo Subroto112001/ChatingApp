@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 import {
@@ -15,9 +15,10 @@ import { getAuth } from "firebase/auth";
 import { ActionForFriend } from "../../../features/featureSlice.js/FriendSlice";
 import { useDispatch } from "react-redux";
 
+
 const Friends = ({ showBtn = true }) => {
   const [friendlist, setfriendlist] = useState([]);
-
+ 
   const [loading, setLoading] = useState(false);
   const db = getDatabase();
   const auth = getAuth();
@@ -34,7 +35,7 @@ const Friends = ({ showBtn = true }) => {
       const UseRef = ref(db, "friend/");
       onValue(UseRef, (snapshot) => {
         let ReceiverfriendBlanklist = [];
-       
+
         snapshot.forEach((item) => {
           if (
             auth.currentUser.uid === item.val().ReciverUid ||
@@ -45,7 +46,6 @@ const Friends = ({ showBtn = true }) => {
               FriendKey: item.key,
             });
           }
-          
         });
         setfriendlist(ReceiverfriendBlanklist);
         setLoading(false);
@@ -78,6 +78,9 @@ const Friends = ({ showBtn = true }) => {
 
   // handle friend
   const handleFriendInfo = (item) => {
+
+
+   
     if (auth.currentUser.uid === item.ReciverUid) {
       console.log(item);
 
@@ -102,10 +105,10 @@ const Friends = ({ showBtn = true }) => {
   };
 
 
+ 
+
   console.log(auth.currentUser.uid);
   console.log(friendlist);
-  
-
 
   if (loading) {
     return <LoadingSkeliton />;
@@ -132,6 +135,7 @@ const Friends = ({ showBtn = true }) => {
                   }
                   key={index}
                   onClick={() => handleFriendInfo(item)}
+                  
                 >
                   <div className="flex justify-center items-center  gap-[15px]">
                     <picture>
