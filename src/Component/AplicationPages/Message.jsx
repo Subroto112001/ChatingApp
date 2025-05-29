@@ -76,9 +76,8 @@ const Message = () => {
         msgReciverEmail: user.userEmail,
         msgReciverProfilePicture: user.userProfilePicture,
         userMsg: massege,
-        createADate: moment().format("MM DD YYYY, h:mm:ss a"),
+        timestamp: Date.now(),
       });
-      
     } catch (error) {
       console.log("This error from masseage sending option", error);
     } finally {
@@ -90,25 +89,35 @@ const Message = () => {
     const fetchmsgdata = () => {
       const MsgRef = ref(db, "Singlemsg/");
       onValue(MsgRef, (snapshot) => {
-        let blankSenderMsgbox = [];
-        let blankReciverMsgbox = [];
+        let allMsgs = [];
+
         snapshot.forEach((item) => {
-          if (auth.currentUser.uid === item.val().msgSenderUid) {
-            blankSenderMsgbox.push({ ...item.val(), msgKey: item.key });
-          }
-          if (auth.currentUser.uid === item.val().msgReciverUid) {
-            blankReciverMsgbox.push({ ...item.val(), msgKey: item.key });
+          
+          const isCurrentUser =
+            item.val().msgSenderUid === auth.currentUser.uid ||
+            item.val().msgReciverUid === auth.currentUser.uid;
+
+          const isChatBetweenCurrentAndSelected =
+            (item.val().msgSenderUid === auth.currentUser.uid &&
+              item.val().msgReciverUid === user.userUID) ||
+            (item.val().msgSenderUid === user.userUID &&
+              item.val().msgReciverUid === auth.currentUser.uid);
+
+          if (isCurrentUser && isChatBetweenCurrentAndSelected) {
+            allMsgs.push({ ...item.val(), msgKey: item.key });
           }
         });
-        setSendermsg(blankSenderMsgbox);
-        setReceivermsg(blankReciverMsgbox);
+
+      
+        allMsgs.sort((a, b) => a.timestamp - b.timestamp);
+        setSendermsg(allMsgs); 
       });
     };
-    fetchmsgdata();
-  }, []);
 
-  console.log("sender", sendermsg);
-  console.log("receiver", receivermsg);
+    fetchmsgdata();
+  }, [user.userUID]);
+
+
 
   return (
     <div className="flex justify-between ">
@@ -151,32 +160,27 @@ const Message = () => {
           </div>
         </div>
         {/* message */}
-        <div className="flex mt-[56px] flex-col   ">
-          {/* left side msg */}
-          {receivermsg.map((item, index) => (
+        <div className="flex mt-[56px] flex-col h-[60vh] overflow-scroll  ">
+          {sendermsg.map((item) => (
             <div
-              className="self-start
-          "
               key={item.msgKey}
+              className={`flex mb-2 ${
+                item.msgSenderUid === auth.currentUser.uid
+                  ? "justify-end"
+                  : "justify-start"
+              }`}
             >
-              <div className="flex flex-col items-start ">
-                <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
-                  <h3 className="text-[ ]"> {item.userMsg}</h3>
-                </div>
-                <p className="ml-3 mt-1">Today, 2.02 pm</p>
-              </div>
-            </div>
-          ))}
-          {/* left side msg */}
-          {/* right side msg */}
-          {sendermsg.map((item, index) => (
-            <div className="self-end" key={item.msgKey}>
-              {" "}
-              <div className="flex flex-col items-start ">
-                <div className="bg-gray-100 text-black px-4 py-2 rounded-lg  text-wrap">
-                  <h3 className="text-[ ]"> {item.userMsg}</h3>
-                </div>
-                <p className="ml-3 mt-1">Today, 2.02 pm</p>
+              <div
+                className={`px-4 py-2 rounded-lg max-w-[60%] ${
+                  item.msgSenderUid === auth.currentUser.uid
+                    ? "bg-blue text-white"
+                    : "bg-gray-200 text-black"
+                }`}
+              >
+                <p>{item.userMsg}</p>
+                <p className="text-xs text-right mt-1 text-gray-500">
+                  {moment(item.timestamp).format("h:mm a")}
+                </p>
               </div>
             </div>
           ))}
